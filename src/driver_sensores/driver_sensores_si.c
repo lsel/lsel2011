@@ -8,11 +8,11 @@
 /* #ifndef MODULE */
 /* #define MODULE */
 /* #endif */
-#include "driver_llegada.h"
+#include "driver_sensores.h"
 #include "sensores.h"
 
 // TO DO:
-// llegada_open: que pasa con las interrupciones, conseguimos q no sde bloque, pero no esta probado aun
+// sensores_open: que pasa con las interrupciones, conseguimos q no sde bloque, pero no esta probado aun
 // gettimemillis: estaria bien definir y programar esta funcion en una libreria aparte
 
 
@@ -31,25 +31,25 @@ struct datos_sensores sensores;
 
 
 /* Abriendo el dispositivo como fichero*/
-int llegada_open(struct inode *inode, struct file *file) 
+int sensores_open(struct inode *inode, struct file *file) 
 {
-  printk("driver_llegada: Driver abierto\n");
+  printk("driver_sensores: Driver abierto\n");
   MOD_INC_USE_COUNT;
   return 0; 
 }
 
 /* Cerrando el dispositivo como fichero*/
-int llegada_release(struct inode *inode, struct file *file)
+int sensores_release(struct inode *inode, struct file *file)
 {
   
   MOD_DEC_USE_COUNT;
-  printk(KERN_INFO "driver_llegada: Driver cerrado\n");
+  printk(KERN_INFO "driver_sensores: Driver cerrado\n");
   return 0;
 
 }
 
 /* Leer datos de los sensores que entran en el puerto */
-ssize_t llegada_read(struct file *filep, char *buf, size_t count, loff_t *f_pos) 
+ssize_t sensores_read(struct file *filep, char *buf, size_t count, loff_t *f_pos) 
 {
 	u_int16_t PA;
 	u_int8_t PA8;
@@ -68,37 +68,37 @@ ssize_t llegada_read(struct file *filep, char *buf, size_t count, loff_t *f_pos)
    //memcpy(buf,(const char*) &sensores, sizeof(sensores));
  
   //Trazas
-  printk(KERN_INFO "driver_llegada: (read) lectura de sensores.estado_sensores=0x%02x\n",sensores.estado_sensores);
-  printk("driver_llegada: (read) lectura de sensores.hora=%lu milliseconds\n",gettimemillis());
+  printk(KERN_INFO "driver_sensores: (read) lectura de sensores.estado_sensores=0x%02x\n",sensores.estado_sensores);
+  printk("driver_sensores: (read) lectura de sensores.hora=%lu milliseconds\n",gettimemillis());
 
  
  return sizeof(sensores);
 }
 
 /*Inicio de módulo*/
-int init_llegada(void)
+int init_sensores(void)
 {
   int result;
 	u_int16_t tmp;
 
-	printk("driver_llegada: Iniciado\n");
+	printk("driver_sensores: Iniciado\n");
   
 	tmp = inw(MCF_BAR + MCFSIM_PACNT);
-	printk(KERN_INFO "driver_llegada: (init) PACNT =0x%04x\n",tmp);
+	printk(KERN_INFO "driver_sensores: (init) PACNT =0x%04x\n",tmp);
 
   // Puertos de entrada (p406 manual)
   outw(0x0000,(MCF_BAR + MCFSIM_PADDR)); 
 
 	tmp = inw(MCF_BAR + MCFSIM_PADDR);
-	printk(KERN_INFO "driver_llegada: (init) PADDR =0x%04x\n",tmp);
+	printk(KERN_INFO "driver_sensores: (init) PADDR =0x%04x\n",tmp);
 
 	tmp = inw(MCF_BAR + MCFSIM_PADAT);
-	printk(KERN_INFO "driver_llegada: (init) PADAT =0x%04x\n",tmp);
+	printk(KERN_INFO "driver_sensores: (init) PADAT =0x%04x\n",tmp);
 
 	
-  result = register_chrdev(IO_N_MAJOR, "driver_llegada", &llegada_fops);
+  result = register_chrdev(IO_N_MAJOR, "driver_sensores", &sensores_fops);
   if (result < 0){
-    printk("driver_llegada: <1>Fallo número mayor\n");
+    printk("driver_sensores: <1>Fallo número mayor\n");
     return result;
   }
   
@@ -106,17 +106,17 @@ int init_llegada(void)
 }
 
 
-void cleanup_llegada(void) {
+void cleanup_sensores(void) {
 
-  if (unregister_chrdev(IO_N_MAJOR, "driver_llegada") < 0)
+  if (unregister_chrdev(IO_N_MAJOR, "driver_sensores") < 0)
     {
-      printk("driver_llegada: Error unregistering module\n");
+      printk("driver_sensores: Error unregistering module\n");
       return;
     }
     
-  printk(KERN_INFO "driver_llegada: Finalizado\n");
+  printk(KERN_INFO "driver_sensores: Finalizado\n");
   return;
 }
 
-module_init(init_llegada);
-module_exit(cleanup_llegada);
+module_init(init_sensores);
+module_exit(cleanup_sensores);

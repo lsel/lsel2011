@@ -1,4 +1,4 @@
-/* Cabecera de driver_llegada */
+/* Cabecera de driver_sensores */
 #include <linux/time.h> 
 
 /* Parametros que pasan los drivers a la aplicación */

@@ -25,15 +25,15 @@
 
 /* Declaración de funciones */
 unsigned long gettimemillis(void);
-int llegada_open(struct inode *inode, struct file *file); 
-int llegada_release(struct inode *inode, struct file *file); 
-//static unsigned int llegada_poll(struct file *file, struct poll_table_struct *wait);
-ssize_t llegada_read(struct file *filep, char *buf, size_t count, loff_t *f_pos);  
+int sensores_open(struct inode *inode, struct file *file); 
+int sensores_release(struct inode *inode, struct file *file); 
+//static unsigned int sensores_poll(struct file *file, struct poll_table_struct *wait);
+ssize_t sensores_read(struct file *filep, char *buf, size_t count, loff_t *f_pos);  
 void manejador_external(int id, void *p, struct pt_regs *regs); 
 
 /* Para manejar el cerrojo */
-struct llegada_data {
-  struct llegada_data	        *ops;
+struct sensores_data {
+  struct sensores_data	        *ops;
   spinlock_t	        	lock;
   char		        	ready;
   wait_queue_head_t     	wait;
@@ -43,11 +43,11 @@ struct llegada_data {
 //static unsigned int    nuevos_datos_sensores = 0;
 
 /*Funciones de acceso a fichero*/
-struct file_operations llegada_fops = {
- read: llegada_read,
- open: llegada_open,
- //poll: llegada_poll,
- release: llegada_release 
+struct file_operations sensores_fops = {
+ read: sensores_read,
+ open: sensores_open,
+ //poll: sensores_poll,
+ release: sensores_release 
 };
 
 
