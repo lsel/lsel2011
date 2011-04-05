@@ -6,7 +6,7 @@
 # Motorola, en la placa de desarrollo M5272C3			#
 #								#
 #################################################################
-
+ 
 
 # Directorio donde está instalada la distribución uClinux
 UCLINUXDIR = /home/josem/uClinux-dist-LSI
@@ -61,7 +61,7 @@ CFLAGS = -fno-builtin -nostdinc -I$(UCLINUXDIR)/linux-2.4.x/include -I$(ANTARES_
 
 # Diferentes targets del desarrollo
 
-all: driver_llegada.o
+all: driver_llegada_si.o
 
 clean:
 	rm -f *.o *.gdb

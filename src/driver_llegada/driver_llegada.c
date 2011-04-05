@@ -63,19 +63,13 @@ int llegada_open(struct inode *inode, struct file *file)
   unsigned int reg32_aux;
   struct llegada_data datos_fichero;
   printk("driver_llegada: Puerto abierto\n");
-  /* Configuracion de interrupciones y puertos */ // Ver pag. 182 del manual
-  reg32_aux=inl(MCF_BAR + MCFSIM_ICR1); 
-  outl(reg32_aux|0xF0000000,(MCF_BAR + MCFSIM_ICR1)); // ICR1: pag. 178
-  reg32_aux=inl(MCF_BAR + MCFSIM_PITR);
-  outl(reg32_aux|0x80000000,(MCF_BAR + MCFSIM_PITR)); // PITR: interrupcción a flanco de subida.
+  
   // Puertos de entrada (p406 manual)
   outw(0x0000,(MCF_BAR + MCFSIM_PADDR)); 
-  //Petición de la interrupción
-  request_irq(VECTOR_INT, manejador_external,SA_INTERRUPT, "INT1", NULL);
   
   MOD_INC_USE_COUNT;
   file->private_data = (void *) &datos_fichero;
-  //sensores.estado_sensores=0;
+  sensores.estado_sensores=0;
   printk(KERN_INFO "driver_llegada: (open) lectura de sensores.estado_sensores=0x%x\n",sensores.estado_sensores&0xFF);
   return 0; 
 }
@@ -83,13 +77,7 @@ int llegada_open(struct inode *inode, struct file *file)
 /* Cerrando el dispositivo como fichero*/
 int llegada_release(struct inode *inode, struct file *file)
 {
-  unsigned int reg32_aux;
-
-  reg32_aux=inl(MCF_BAR + MCFSIM_ICR1); 
-  outl(reg32_aux&0x0FFFFFFF,(MCF_BAR + MCFSIM_ICR1)); // ICR1: pag. 178
-  reg32_aux=inb(MCF_BAR + MCFSIM_PITR);
-  outl(reg32_aux&0x7FFFFFFF,(MCF_BAR + MCFSIM_PITR)); // PITR: interrupcción a flanco de subida.
-  free_irq(VECTOR_INT, NULL);
+  
   MOD_DEC_USE_COUNT;
   printk(KERN_INFO "driver_llegada: Puerto cerrado\n");
   return 0;
@@ -145,16 +133,10 @@ ssize_t llegada_read(struct file *filep, char *buf, size_t count, loff_t *f_pos)
   printk(KERN_INFO "driver_llegada: (read) lectura de sensores.estado_sensores=0x%x\n",sensores.estado_sensores&0xFF);
   printk("%lu milliseconds\n",gettimemillis());
 
-
+ //Instrucción para pasar el struct por el buf
  memcpy(buf,(const char*) &sensores, sizeof(sensores));
-  /*for (i = 0; i<=NUMERO_SENSORES; i++) {
-    if ((sensores.estado_sensores>>i) & 1){ // si el sensor está activo
-      buf[i]='1'; 
-    } else {
-      buf[i]='0';  
-    }
-  }*/
-  return NUMERO_SENSORES;
+ 
+ return NUMERO_SENSORES;
 }
 
 /*Inicio de módulo*/
@@ -162,6 +144,15 @@ int init_llegada(void)
 {
   int result;
   result = register_chrdev(IO_N_MAJOR, "driver_llegada", &llegada_fops);
+  /* Configuracion de interrupciones y puertos */ // Ver pag. 182 del manual
+  reg32_aux=inl(MCF_BAR + MCFSIM_ICR1); 
+  outl(reg32_aux|0xF0000000,(MCF_BAR + MCFSIM_ICR1)); // ICR1: pag. 178
+  reg32_aux=inl(MCF_BAR + MCFSIM_PITR);
+  outl(reg32_aux|0x80000000,(MCF_BAR + MCFSIM_PITR)); // PITR: interrupcción a flanco de subida.
+  
+  //Petición de la interrupción
+  request_irq(VECTOR_INT, manejador_external,SA_INTERRUPT, "INT1", NULL);
+  
   if (result < 0){
     printk("driver_llegada: <1>Fallo número mayor\n");
     return result;
@@ -178,6 +169,12 @@ void cleanup_llegada(void) {
       printk("driver_llegada: Error unregistering module\n");
       return;
     }
+    unsigned int reg32_aux;
+    reg32_aux=inl(MCF_BAR + MCFSIM_ICR1); 
+    outl(reg32_aux&0x0FFFFFFF,(MCF_BAR + MCFSIM_ICR1)); // ICR1: pag. 178
+    reg32_aux=inb(MCF_BAR + MCFSIM_PITR);
+    outl(reg32_aux&0x7FFFFFFF,(MCF_BAR + MCFSIM_PITR)); // PITR: interrupcción a flanco de subida.
+    free_irq(VECTOR_INT, NULL);
   printk(KERN_INFO "driver_llegada: Finalizado\n");
   return;
 }
