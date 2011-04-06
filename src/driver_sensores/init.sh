@@ -3,7 +3,7 @@
 ## INICIALIZACION DRIVERS
 ## HBG 2011-03-22
 
-DRIVER=/mnt/drivers/driver_sensores.o
+DRIVER=/mnt/lsel2011/src/driver_sensores/driver_sensores.o
 MAJORN=250
 MINORN=0
 DEVFIL=/var/sensores

@@ -24,9 +24,9 @@ struct datos_sensores sensores;
 
 /* Permite que la aplicación lea si ha habido cambios */
 /* http://tali.admingilde.org/dhwk/vorlesung///Rellenamos el Struct
-  sensores.estado_sensores=inb(MCF_BAR + MCFSIM_PADAT); // se meten los datos en esa registro de datos
-  sensores.hora_evento_ms = gettimemillis();
-  nuevos_datos_sensores = 1; ar01s08.html */
+   sensores.estado_sensores=inb(MCF_BAR + MCFSIM_PADAT); // se meten los datos en esa registro de datos
+   sensores.hora_evento_ms = gettimemillis();
+   nuevos_datos_sensores = 1; ar01s08.html */
 /* Linux Device Drivers p. 163 */
 
 
@@ -51,14 +51,14 @@ int sensores_release(struct inode *inode, struct file *file)
 /* Leer datos de los sensores que entran en el puerto */
 ssize_t sensores_read(struct file *filep, char *buf, size_t count, loff_t *f_pos) 
 {
-	u_int16_t PA;
-	u_int8_t PA8;
+  u_int16_t PA;
+  u_int8_t PA8;
   //Rellenamos el Struct
-	PA = inw(MCF_BAR + MCFSIM_PADAT);
+  PA = inw(MCF_BAR + MCFSIM_PADAT);
 
 
-	PA8 = ((PA>>8)&0x01) << 7;	
-	sensores.estado_sensores = (PA & 0x7F) + PA8;
+  PA8 = ((PA>>8)&0x01) << 7;	
+  sensores.estado_sensores = (PA & 0x7F) + PA8;
 	
 
   sensores.hora_evento_ms = gettimemillis();
@@ -67,32 +67,32 @@ ssize_t sensores_read(struct file *filep, char *buf, size_t count, loff_t *f_pos
   memcpy(buf,(const char*) &sensores, sizeof(sensores));
   
   //Trazas
-  printk(KERN_INFO "driver_sensores: (read) lectura de sensores.estado_sensores=0x%02x\n",sensores.estado_sensores);
+  printk(KERN_INFO "driver_sensores: (read) lectura de sensores.estado_sensores=0x%02X\n",sensores.estado_sensores&0xFF);
   printk("driver_sensores: (read) lectura de sensores.hora=%lu milliseconds\n",gettimemillis());
 
  
- return sizeof(sensores);
+  return sizeof(sensores);
 }
 
 /*Inicio de módulo*/
 int init_sensores(void)
 {
   int result;
-	u_int16_t tmp;
+  u_int16_t tmp;
 
-	printk("driver_sensores: Iniciado\n");
+  printk("driver_sensores: Iniciando\n");
   
-	tmp = inw(MCF_BAR + MCFSIM_PACNT);
-	printk(KERN_INFO "driver_sensores: (init) PACNT =0x%04x\n",tmp);
+  tmp = inw(MCF_BAR + MCFSIM_PACNT);
+  printk(KERN_INFO "driver_sensores: (init) PACNT =0x%04x\n",tmp);
 
   // Puertos de entrada (p406 manual)
   outw(0x0000,(MCF_BAR + MCFSIM_PADDR)); 
 
-	tmp = inw(MCF_BAR + MCFSIM_PADDR);
-	printk(KERN_INFO "driver_sensores: (init) PADDR =0x%04x\n",tmp);
+  tmp = inw(MCF_BAR + MCFSIM_PADDR);
+  printk(KERN_INFO "driver_sensores: (init) PADDR =0x%04x\n",tmp);
 
-	tmp = inw(MCF_BAR + MCFSIM_PADAT);
-	printk(KERN_INFO "driver_sensores: (init) PADAT =0x%04x\n",tmp);
+  tmp = inw(MCF_BAR + MCFSIM_PADAT);
+  printk(KERN_INFO "driver_sensores: (init) PADAT =0x%04x\n",tmp);
 
 	
   result = register_chrdev(IO_N_MAJOR, "driver_sensores", &sensores_fops);
@@ -100,6 +100,8 @@ int init_sensores(void)
     printk("driver_sensores: <1>Fallo número mayor\n");
     return result;
   }
+  
+  printk("driver_sensores: Iniciado con exito.\n");
   
   return 0;
 }

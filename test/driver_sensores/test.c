@@ -38,8 +38,8 @@ int main(void){
   for (j=0; j<NUM_EJECUCIONES; j++)
     {
       fread(&sensores,1,sizeof(sensores),driver_llegada);
-      printf("driver_sensores: (read) lectura de sensores.estado_sensores=0x%02x\n",sensores.estado_sensores);
-      printf("driver_sensores: (read) lectura de sensores.hora=%lu milliseconds\n",sensores.hora_evento_ms);
+      printf("Lectura de sensores.estado_sensores=0x%02X\n",sensores.estado_sensores&0xFF);
+      printf("Lectura de sensores.hora=%lu milliseconds\n",sensores.hora_evento_ms);
       sleep(1);
       printf("\n");
     }

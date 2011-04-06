@@ -61,7 +61,7 @@ CFLAGS = -fno-builtin -nostdinc -I$(UCLINUXDIR)/linux-2.4.x/include -I$(ANTARES_
 
 # Diferentes targets del desarrollo
 
-all: driver_sensores_si.o
+all: driver_sensores.o
 
 clean:
 	rm -f *.o *.gdb
