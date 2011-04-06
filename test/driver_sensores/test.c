@@ -16,7 +16,6 @@
 #define IO_N_MAJOR 250
 #define IO_N_MINOR1 0
 #define NUM_SENSORES 2
-#define NUM_EJECUCIONES 100
 
 struct datos_sensores {
   char estado_sensores;
@@ -27,7 +26,6 @@ int main(void){
   
   FILE *driver_llegada;
   struct datos_sensores sensores;
-  int j;
   
   driver_llegada = fopen("/var/sensores", "r");
   if(driver_llegada == NULL) {
@@ -35,7 +33,7 @@ int main(void){
     return -1;
   }
   
-  for (j=0; j<NUM_EJECUCIONES; j++)
+  while(1)
     {
       fread(&sensores,1,sizeof(sensores),driver_llegada);
       printf("Lectura de sensores.estado_sensores=0x%02X\n",sensores.estado_sensores&0xFF);
