@@ -1,20 +1,42 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#define S0MASK 0x03
-#define S1MASK 0x0C
-#define S2MASK 0x30
-#define S3MASK 0xC0
+#define S0ABAJO 0x01
+#define S0ARRIBA 0x02 
+#define S1ABAJO 0x04 
+#define S1ARRIBA 0x08
+#define S2ABAJO 0x10 
+#define S2ARRIBA 0x20 
+#define S3ABAJO 0x40 
+#define S3ARRIBA 0x80
+
+#define DELAY 200000
+
+char sensorActivo;
 
 struct datos_sensores {
   char estado;
-  unsigned long hora_evento_ms;        
+  unsigned long hora_evento_ms;
 };
+
+	FILE *driver_llegada;
+  struct datos_sensores sensores, sensores_prev;
+
+int actualizarSensores(void){
+		sensores_prev=sensores;
+		if (fread(&sensores,1,sizeof(sensores),driver_llegada) != sizeof(sensores)) {
+      			printf("(tracking) Error fread\n");
+     			 	return -1;
+		}
+
+		
+		return 0;
+}
+
 
 int main(void){
   
-  FILE *driver_llegada;
-  struct datos_sensores sensores, sensores_prev;
+  
   int pos_tren_vapor=0, pos_tren_diesel=0; // de 0 a 3
 
   sensores_prev.estado = 0;
@@ -25,33 +47,68 @@ int main(void){
     return -1;
   }
 
+ 
   while(1){
-    if (fread(&sensores,1,sizeof(sensores),driver_llegada) != sizeof(sensores)) {
-      printf("(tracking) Error fread\n");
-      return -1;
-    }
+		usleep(50000);
 
-    if sensores.estado!=sensores_prev.estado {
-	if (sensores.estado&S0MASK)!=(sensores_prev.estado&S0MASK) {
-	    if (sensores.estado&S0MASK) == 0x03 pos_tren_vapor=0;
-	    else pos_tren_diesel=0;
-	  }
-	if (sensores.estado&S1MASK)!=(sensores_prev.estado&S1MASK) {
-	    if ((sensores.estado&S1MASK)>>2) == 0x03 pos_tren_vapor=1;
-	    else pos_tren_diesel=1;
-	  }
-	if (sensores.estado&S2MASK)!=(sensores_prev.estado&S2MASK) {
-	    if ((sensores.estado&S2MASK)>>4) == 0x03 pos_tren_vapor=2;
-	    else pos_tren_diesel=2;
-	  }
-	if (sensores.estado&S3MASK)!=(sensores_prev.estado&S3MASK) {
-	    if ((sensores.estado&S3MASK)>>6) == 0x03 pos_tren_vapor=3;
-	    else pos_tren_diesel=3;
-	  }
-      }
-    
-    sensores_prev=sensores;
-    printf("(tracking) Posicion tren vapor:  sector %d\n",pos_tren_vapor);
-    printf("(tracking) Posicion tren diesel: sector %d\n",pos_tren_diesel);
-  }
+    if (actualizarSensores()== 0){ 
+			if (sensores.estado!=sensores_prev.estado) {
+				printf("Los sensores han cambiado\n");
+				sensorActivo = ((~sensores_prev.estado) & (sensores.estado));							
+				if ((sensorActivo & S0ABAJO) != 0){
+					usleep (DELAY);
+					if (actualizarSensores() ==0){
+						if ((sensores.estado & S0ARRIBA) != 0){
+							pos_tren_vapor = 0;
+							printf("(tracking) Tren de vapor entra en la zona 0\n");
+						}else {
+							pos_tren_diesel = 0;
+							printf("(tracking) Tren diesel entra en la zona 0\n");
+						}
+					}
+				}
+			
+				if ((sensorActivo & S1ABAJO) != 0){
+					usleep (DELAY);
+					if (actualizarSensores() ==0){
+						if ((sensores.estado & S1ARRIBA) != 0){
+							pos_tren_vapor = 1;
+							printf("(tracking) Tren de vapor entra en la zona 1\n");
+						}else {
+							pos_tren_diesel = 1;
+							printf("(tracking) Tren diesel entra en la zona 1\n");
+						}
+					}
+				}
+
+				if ((sensorActivo & S2ABAJO) != 0){
+					usleep (DELAY);
+					if (actualizarSensores() ==0){
+						if ((sensores.estado & S2ARRIBA) != 0){
+							pos_tren_vapor = 2;
+							printf("(tracking) Tren de vapor entra en la zona 2\n");
+						}else {
+							pos_tren_diesel = 2;
+							printf("(tracking) Tren diesel entra en la zona 2\n");
+						}
+					}
+				}
+			
+				if ((sensorActivo & S3ABAJO) != 0){
+					usleep (DELAY);
+					if (actualizarSensores() ==0){
+						if ((sensores.estado & S3ARRIBA) != 0){
+							pos_tren_vapor = 3;
+							printf("(tracking) Tren de vapor entra en la zona 3\n");
+						}else {
+							pos_tren_diesel = 3;
+							printf("(tracking) Tren diesel entra en la zona 3\n");
+						}
+					}
+				}
+ 		 }
+	 }
+
+
+}
 }

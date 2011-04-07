@@ -65,7 +65,7 @@ LDLIBS = -L$(UCLINUXDIR)/lib/libc -lc
 
 # Diferentes targets del desarrollo
 
-all: test
+all: tracking
 
 clean:
 	rm -f *.o *.gdb
