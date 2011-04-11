@@ -1,4 +1,4 @@
-int serial_send (int fd, const char* msg, int max_ms);
+int serial_send (int fd, const char* msg, int len);
 int serial_recv (int fd, char* buf, int max_bytes, int max_ms);
 
 int serial_open (const char* dev, 

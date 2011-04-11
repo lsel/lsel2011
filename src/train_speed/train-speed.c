@@ -21,16 +21,17 @@ uint8_t check_paridad(uint8_t word)
   }
 }
 
-void main(int argc, char* argv[]) 
+int main(int argc, char* argv[]) 
 {
 	
   uint8_t number_train = atoi(argv[1]);
   uint8_t number_way = atoi(argv[2]);
   uint8_t number_speed = atoi(argv[3]);
-	
+  int ret;	
+  
   uint8_t final, paridad;
-  //FILE * puertoserie;
-	int puertoserie;
+//  FILE * puertoserie;
+    int puertoserie;
 	
   uint8_t word = ((number_train & 0x01) << 6) | ((number_way & 0x01) << 5) | (number_speed & 0x1F);
   paridad = check_paridad(word);	
@@ -38,24 +39,29 @@ void main(int argc, char* argv[])
   printf("tren %d ,sentido %d, velocidad %d \n", number_train, number_way, number_speed);	
 
   final = ((paridad & 0x01) << 7) | word;
-  printf("%d \n", final);
-
-
-  //puertoserie = fopen("/dev/ttyS1","w");
-  //fwrite(&final, 1, 1, puertoserie);
-  //fclose(puertoserie);
-	
+  printf("0x%X \n", final);
+#if 0
+  puertoserie = fopen("/dev/ttyS1","rw");
+  ret = fwrite(&final, 1, 1, puertoserie);
+  printf("fwrite devuelve %i\n", ret);
+  fclose(puertoserie);
+#endif
+#if 1	
   puertoserie = serial_open("/dev/ttyS1","19200","8N1",0,0);
 	if (puertoserie >= 0) 
 	{
+
 		printf("Puerto serie S1 open \n");
-		serial_send(puertoserie, &final ,0);
-		printf("enviado \n");
+		ret = serial_send(puertoserie, &final , 1);
+		printf("enviado, serial_send devuelve %i \n", ret);
 		close(puertoserie);
 	} 
 	else 
 	{
 	printf("No se ha podido abrir el puerto serie S1 \n");
 	}
+#endif
+	return 0;
+
 }
 

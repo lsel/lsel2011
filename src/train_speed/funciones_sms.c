@@ -46,10 +46,10 @@
  *  Metodo para escribir en el puerto serie de forma no bloqueante
  ***************************************************************************************/
 
-int serial_send (int fd, const char* msg, int max_ms)
+int serial_send (int fd, const char* msg, int len)
 {
   DEBUG(puts (msg); fflush(stdout));
-  return write (fd, msg, strlen(msg));
+  return write (fd, msg, len);
 }
 
 /***************************************************************************************

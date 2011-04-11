@@ -19,7 +19,7 @@ CC = $(TOOLCHAINDIR)/bin/m68k-elf-gcc -B/opt/old-gnu-toolchain/lib/gcc-lib/
 
 
 # Opciones para el compilador a la hora de generar los ficheros objeto
-CFLAGS = -m5307 -msep-data -Os -fomit-frame-pointer -I$(UCLINUXDIR)/lib/libc/include -I$(UCLINUXDIR)/linux-2.4.x/include -I$(TOOLCHAINDIR)/m68k-elf/include -I$(TOOLCHAINDIR)/lib/gcc-lib/m68k-elf/2.95.3/include -fno-builtin -I$(INCLUDEDIR)
+CFLAGS = -m5307 -msep-data -Os -fomit-frame-pointer -I$(UCLINUXDIR)/lib/libc/include -I$(UCLINUXDIR)/linux-2.4.x/include -I$(TOOLCHAINDIR)/m68k-elf/include -I$(TOOLCHAINDIR)/lib/gcc-lib/m68k-elf/2.95.3/include -fno-builtin -I$(INCLUDEDIR) -DNDEBUG
 
 
 # Opciones para el compilador a la hora de generar los ejecutales
