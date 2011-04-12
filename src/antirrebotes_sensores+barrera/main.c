@@ -26,7 +26,9 @@ void  RB_isr(void)
       //if(sensors[i].current != sensors[i].last){ //No va bien el compilador
       if(a != b){
       //Ha cambiado el sensor
-      anySensorChangeDetected=1;
+      if(i==BEFORE_BARRIER_SENSOR || i==AFTER_BARRIER_SENSOR){
+         anySensorChangeDetected=1;
+      }
                         
             if(sensors[i].current == 1){             
             //Se ha activado el sensor
