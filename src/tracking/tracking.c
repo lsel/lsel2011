@@ -54,7 +54,7 @@ void estimacion (int tren, int zona){
 
   //Estimo si es vapor. Valores por defecto para la primera vuelta
   if ((tiempovapor.t1 != 0) & (tiempovapor.t0 !=0)){
-    tiempovapor.estimacionT0 = tiempovapor.estimacionT1*((DISTS0/DISTS1)+1); //calcula la estimacion desde S0 en s.
+    tiempovapor.estimacionT0 = tiempovapor.estimacionT2*((DISTS0/DISTS2)+1);             //calcula la estimacion desde S0 en s.
     tiempovapor.estimacionT1 = (DISTS1*(tiempovapor.t1 - tiempovapor.t0))/(1000*DIST01); //calcula la estimacion desde S1 en s.
   }else{
     tiempovapor.estimacionT0 = 14;
@@ -68,7 +68,7 @@ void estimacion (int tren, int zona){
 
   //Estimo si es diesel. Valores por defecto para la primera vuelta
   if ((tiempodiesel.t1 != 0) & (tiempodiesel.t0 != 0)){
-    tiempodiesel.estimacionT0 = tiempodiesel.estimacionT1*((DISTS0/DISTS1)+1); //calcula la estimacion desde S0 en s.
+    tiempodiesel.estimacionT0 = tiempodiesel.estimacionT2*((DISTS0/DISTS2)+1);              //calcula la estimacion desde S0 en s.
     tiempodiesel.estimacionT1 = (DISTS1*(tiempodiesel.t1 - tiempodiesel.t0))/(1000*DIST01); //calcula la estimacion desde S1 en s.
   }else{
     tiempodiesel.estimacionT0 = 13;
@@ -82,35 +82,35 @@ void estimacion (int tren, int zona){
 
   if (tren == 0){  // diesel
     if (zona == 0){
-      printf("(estimacion) Tren diesel saliendo de la estacion\n");
-      printf("(estimacion) Tiempo estimado de llegada para el tren diesel: %ld segundos. \n", tiempodiesel.estimacionT0);
+   //   printf("(estimacion) Tren diesel saliendo de la estacion\n");
+      printf("Tren diesel entra en zona 0. Tiempo estimado: %ld segundos. \n", tiempodiesel.estimacionT0);
     }
     if (zona == 1){
-      printf("(estimacion) Tiempo estimado de llegada para el tren diesel: %ld segundos. \n", tiempodiesel.estimacionT1);
+      printf("Tren diesel entra en zona 1. Tiempo estimado: %ld segundos. \n", tiempodiesel.estimacionT1);
     }
     if (zona == 2){
-      printf("(estimacion) Tiempo estimado de llegada para el tren diesel: %ld segundos. \n", tiempodiesel.estimacionT2);
+      printf("Tren diesel entra en zona 2. Tiempo estimado: %ld segundos. \n", tiempodiesel.estimacionT2);
     }
     if (zona == 3){
-      printf("(estimacion) Tren diesel entrando en la estacion\n");
-      printf("(estimacion) Tiempo estimado de llegada para el tren diesel: 0 segundos. \n");
+    //  printf("(estimacion) Tren diesel entrando en la estacion\n");
+      printf("Tren diesel entra en zona 0. Tiempo estimado: 0 segundos. \n");
     }
   }
 
   if (tren == 1){  // vapor
     if (zona == 0){
-      printf("(estimacion) Tren vapor saliendo de la estacion\n");
-      printf("(estimacion) Tiempo estimado de llegada para el tren de vapor: %ld segundos. \n", tiempovapor.estimacionT0);
+  //    printf("(estimacion) Tren vapor saliendo de la estacion\n");
+      printf("Tren de vapor entra en zona 0. Tiempo estimado: %ld segundos. \n", tiempovapor.estimacionT0);
     }
     if (zona == 1){
-      printf("(estimacion) Tiempo estimado de llegada para el tren de vapor: %ld segundos. \n", tiempovapor.estimacionT1);
+      printf("Tren de vapor entra en zona 1. Tiempo estimado: %ld segundos. \n", tiempovapor.estimacionT1);
     }
     if (zona == 2){
-      printf("(estimacion) Tiempo estimado de llegada para el tren de vapor: %ld segundos. \n", tiempovapor.estimacionT2);
+      printf("Tren de vapor entra en zona 2. Tiempo estimado: %ld segundos. \n", tiempovapor.estimacionT2);
     }
     if (zona == 3){
-      printf("(estimacion) Tren de vapor entrando en la estacion\n");
-      printf("(estimacion) Tiempo estimado de llegada para el tren de vapor: 0 segundos. \n");
+  //  printf("(estimacion) Tren de vapor entrando en la estacion\n");
+      printf("Tren de vapor entra en zona 3. Tiempo estimado: 0 segundos. \n");
     }
   }
 }
@@ -149,12 +149,12 @@ int main(void){
 	  if (actualizarSensores() ==0){
 	    if ((sensores.estado & S0ARRIBA) != 0){
 	      pos_tren_diesel = 0;
-	      printf("(tracking) Tren diesel entra en la zona 0\n");
+	//      printf("(tracking) Tren diesel entra en la zona 0\n");
 	      tiempodiesel.t0 = hora;
 	      estimacion(0,0);
 	    }else {
 	      pos_tren_vapor = 0;
-	      printf("(tracking) Tren de vapor entra en la zona 0\n");
+//	      printf("(tracking) Tren de vapor entra en la zona 0\n");
 	      tiempovapor.t0 = hora;
 	      estimacion(1,0);
 	    }
@@ -166,12 +166,12 @@ int main(void){
 	  if (actualizarSensores() ==0){
 	    if ((sensores.estado & S1ARRIBA) != 0){
 	      pos_tren_diesel = 1;
-	      printf("(tracking) Tren diesel entra en la zona 1\n");
+//	      printf("(tracking) Tren diesel entra en la zona 1\n");
 	      tiempodiesel.t1 = hora;
 	      estimacion(0,1);
 	    }else {
 	      pos_tren_vapor = 1;
-	      printf("(tracking) Tren de vapor entra en la zona 1\n");
+//	      printf("(tracking) Tren de vapor entra en la zona 1\n");
 	      tiempovapor.t1 = hora;
 	      estimacion(1,1);
 	    }
@@ -183,12 +183,12 @@ int main(void){
 	  if (actualizarSensores() ==0){
 	    if ((sensores.estado & S2ARRIBA) != 0){
 	      pos_tren_diesel = 2;
-	      printf("(tracking) Tren diesel entra en la zona 2\n");
+//	      printf("(tracking) Tren diesel entra en la zona 2\n");
 	      tiempodiesel.t2 = hora;
 	      estimacion(0,2);
 	    }else {
 	      pos_tren_vapor = 2;
-	      printf("(tracking) Tren de vapor entra en la zona 2\n");
+//	      printf("(tracking) Tren de vapor entra en la zona 2\n");
 	      tiempovapor.t2 = hora;
 	      estimacion(1,2);
 	    }
@@ -200,11 +200,11 @@ int main(void){
 	  if (actualizarSensores() ==0){
 	    if ((sensores.estado & S3ARRIBA) != 0){
 	      pos_tren_diesel = 3;
-	      printf("(tracking) Tren diesel entra en la zona 3\n");
+//	      printf("(tracking) Tren diesel entra en la zona 3\n");
 	      estimacion(0,3);
 	    }else {
 	      pos_tren_vapor = 3;
-	      printf("(tracking) Tren de vapor entra en la zona 3\n");
+//	      printf("(tracking) Tren de vapor entra en la zona 3\n");
 	      estimacion(1,3);
 	    }
 	  }
