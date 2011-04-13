@@ -93,7 +93,7 @@ void estimacion (int tren, int zona){
     }
     if (zona == 3){
     //  printf("(estimacion) Tren diesel entrando en la estacion\n");
-      printf("Tren diesel entra en zona 0. Tiempo estimado: 0 segundos. \n");
+      printf("Tren diesel entra en zona 3. Tiempo estimado: 0 segundos. \n");
     }
   }
 
