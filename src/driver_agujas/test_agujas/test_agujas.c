@@ -15,7 +15,7 @@ int main (int argc, char *argv[])
 	else
 		printf("Agujas: Abriendo el archivo para lectura y escritura\n");
 
-	valor[0] = 0xAA;
+	valor[0] = 0xF0;
 
 	error = write(driver,valor,1);
 	

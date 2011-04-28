@@ -79,11 +79,32 @@ int agujas_release(struct inode *inode, struct file *filep)
 ssize_t agujas_read(struct file *filep, char *buf, size_t count, loff_t *f_pos)
 {
 	// Devuelve el estado global de las agujas
-	// Ojo: NO se accede al puerto para lectura
 
-	buf[0] = estado_agujas;	
+	int minor;
+	char valor;
+	char mask;
 
-	printk("<1>Driver de agujas: leyendo un %x\n",estado_agujas);
+	minor = MINOR(filep->f_dentry->d_inode->i_rdev);
+
+	if (minor == 0){
+		mask = 0xFE;
+	} else if (minor == 1) {
+		mask = 0xFD;
+	} else if (minor == 2) {
+		mask = 0xFB;
+	} else {
+		printk("<1>Driver de agujas: llamada a read con minor incorrecto\n");
+		return -1;
+	}
+
+	valor = estado_agujas & mask;
+
+	if (valor == 0)
+		buf[0] = 0;
+	else
+		buf[0] = 1;
+
+	printk("<1>Driver de agujas: leyendo un %x\n",buf[0]);
 
 	return 1;
 }
@@ -91,13 +112,40 @@ ssize_t agujas_read(struct file *filep, char *buf, size_t count, loff_t *f_pos)
 
 ssize_t agujas_write(struct file *filep, const char *buf, size_t count, loff_t *f_pos)
 {
-	// Escribe en el puerto el estado de las agujas
-	outb(buf[0],PORT0);
+	int minor;
+	char valor;
+	char mask;
+	minor = MINOR(filep->f_dentry->d_inode->i_rdev);
 
-	printk("<1>Driver de agujas: escribiendo un %x\n",buf[0]);
+	if (minor == 0){
+		mask = 0xFE;
+	} else if (minor == 1) {
+		mask = 0xFD;
+	} else if (minor == 2) {
+		mask = 0xFB;
+	} else {
+		printk("<1>Driver de agujas: llamada a write con minor incorrecto\n");
+		return -1;
+	}
+
+	if (buf[0] == 0)
+		valor = estado_agujas & mask;
+	else if (buf[0] == 1)
+		valor = (estado_agujas & mask) | (0xFF & !mask);
+	else {
+		printk("<1>Driver de agujas: error en valor de escritura\n");
+		return -1;
+	}
+		
+		
+
+	// Escribe en el puerto el estado de las agujas
+	outb(valor,PORT0);
+
+	printk("<1>Driver de agujas: escribiendo un %x\n",valor);
 
 	// Actualiza el estado global
-	estado_agujas = buf[0];
+	estado_agujas = valor;
 	
 	return 1;
 }
