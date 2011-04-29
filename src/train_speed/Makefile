@@ -34,6 +34,10 @@ all: train-speed
 
 train-speed: train-speed.o funciones_sms.o
 
+ts: train-speed
+	mv train-speed ts
+	chmod 775 ts
+
 clean:
 	rm -rf *.o *.gdb $(EXEC)
 
