@@ -1,4 +1,8 @@
 // LSEL 2011 - Driver para el cambio de agujas y el control de los semáforos.
+// Uso del driver:
+// Se cargarán tres ficheros con un minor number correspondiente al bit que se va a modificar
+// En EL PRIMER BYTE de dicho fichero se escribe el valor con que se quiere poner el bit
+
 #include <linux/module.h>
 #include <linux/init.h>
 #include <linux/kernel.h>
@@ -9,18 +13,22 @@
 #include <asm/mcfsim.h> 	// Registros internos del MCF5272
 #include <asm/io.h> 
 
-//Variables globales
+//Constantes
 #define vias_major  251 	//Número mayor
 #define PORT0 0x30000000	
 
+// Variables globales
 int init_module(void);
 void cleanup_module(void);
 int vias_open(struct inode *inode, struct file *filp);
 int vias_release(struct inode *inode, struct file *filep);
+char estado_vias;
+
+// Prototipos de funciones
 ssize_t vias_read(struct file *filep, char *buf, size_t count, loff_t *f_pos);
 ssize_t vias_write(struct file *filep, const char *buf, size_t count, loff_t *f_pos);
 
-/*Funciones de acceso a fichero*/
+//Funciones de acceso a fichero
 struct file_operations vias_fops = {
 	read: vias_read,
 	write: vias_write,
@@ -28,7 +36,6 @@ struct file_operations vias_fops = {
 	release: vias_release
 };
 
-char estado_vias;
 
 int init_module(void)
 {
@@ -79,7 +86,7 @@ int vias_release(struct inode *inode, struct file *filep)
 
 ssize_t vias_read(struct file *filep, char *buf, size_t count, loff_t *f_pos)
 {
-	// Devuelve el estado global de las agujas
+	// Devuelve el estado del bit consultado mediante el minor number
 
 	int minor;
 	char valor;
@@ -99,9 +106,9 @@ ssize_t vias_read(struct file *filep, char *buf, size_t count, loff_t *f_pos)
 		return -1;
 	}
 
-	valor = estado_vias & ~mask;
+	valor = estado_vias & ~mask;	// Halla el valor del bit indicado
 
-	if (valor == 0)
+	if (valor == 0)			// Devuelve el valor
 		buf[0] = 0;
 	else
 		buf[0] = 1;
@@ -114,6 +121,8 @@ ssize_t vias_read(struct file *filep, char *buf, size_t count, loff_t *f_pos)
 
 ssize_t vias_write(struct file *filep, const char *buf, size_t count, loff_t *f_pos)
 {
+	// Actualiza el estado del bit correspondiente al fichero indicado
+
 	int minor;
 	char valor;
 	char mask;
