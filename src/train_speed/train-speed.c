@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
   //printf("tren %d ,sentido %d, velocidad %d \n", number_train, number_way, number_speed);	
 
   final = ((paridad & 0x01) << 7) | word;
-  //printf("0x%X \n", final);
+  printf("0x%X \n", final);
 #if 0
   puertoserie = fopen("/dev/ttyS1","rw");
   ret = fwrite(&final, 1, 1, puertoserie);
@@ -50,19 +50,23 @@ int main(int argc, char* argv[])
   puertoserie = serial_open("/dev/ttyS1","19200","8N1",0,0);
 	if (puertoserie >= 0) 
 	{
-		char* tren;
-		char* sentido;		
+		char tren[30];
+		char sentido[30];		
 		if (number_train == 0)
 		{
-			tren = "vapor";
+			//tren = "vapor";
+			sprintf(tren, "vapor");
 		} else {
-			tren = "diesel";
+			//tren = "diesel";
+			sprintf(tren, "diesel");
 		} 		
-		if (number_way == 0)
+		if (number_way == 1)
 		{
-			sentido = "hacia delante";
+			//sentido = "hacia delante";
+			sprintf(sentido, "hacia delante");
 		} else {
-			sentido = "marcha atrás";		
+			//sentido = "marcha atrás";
+			sprintf(sentido, "hacia atras");	
 		}
 		printf("tren %s %s, velocidad %d \n", tren, sentido, number_speed);
 		//printf("Puerto serie S1 open \n");

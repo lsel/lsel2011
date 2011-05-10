@@ -65,8 +65,8 @@ char semaforoA;
 char semaforoB;
 
 //data velocidad
-char* tVapor = "/mnt/src/train_speed/ts 0 0";
-char* tDiesel = "/mnt/src/train_speed/ts 1 0";
+char* tVapor = "/mnt/src/train_speed/ts 0 1";
+char* tDiesel = "/mnt/src/train_speed/ts 1 1";
 int velocidadVapor = 15;
 int velocidadDiesel = 15;
 //end data velocidad
@@ -101,8 +101,8 @@ void iniciaEstado (void){
 	actualizarAgujas();
 	printf("Verde %d, Rojo %d, agujas %d\n", semaforoA, semaforoB, estado_agujas);
 	 
-  out = system ("/mnt/src/train_speed/ts 0 0 15");
-	out = system ("/mnt/src/train_speed/ts 1 0 15");
+  out = system ("/mnt/src/train_speed/ts 0 1 15");
+	out = system ("/mnt/src/train_speed/ts 1 1 15");
   
   pos_tren_diesel=3; 
   pos_tren_vapor=1; 
@@ -295,6 +295,10 @@ void subirDieselBajarVapor (int mod)
 		char comando2[35];
 		// bajamos velocidad vapor;		
 		velocidadVapor = velocidadVapor - mod;
+		if (velocidadVapor < 0)
+		{
+			velocidadVapor = 0;
+		}		
 		sprintf(comando, "%s %d", tVapor, velocidadVapor);
 		out = system (comando);
 		if (out == 1)
@@ -303,6 +307,10 @@ void subirDieselBajarVapor (int mod)
 		}
 		// subimos velocidad diesel
 		velocidadDiesel = velocidadDiesel +  mod;
+		if (velocidadDiesel > 30)
+		{
+			velocidadDiesel = 30;
+		}
 		sprintf(comando2, "%s %d", tDiesel, velocidadDiesel);
 		out = system (comando2);
 		if (out == 1)
@@ -318,6 +326,10 @@ void subirVaporBajarDiesel (int mod)
 		char comando2[35];
 	// subimos velocidad vapor;		
 		velocidadVapor = velocidadVapor + mod;
+		if (velocidadVapor > 30)
+		{
+			velocidadVapor = 30;
+		}
 		sprintf(comando, "%s %d", tVapor, velocidadVapor);
 		out = system (comando);
 		if (out == 1)
@@ -326,6 +338,10 @@ void subirVaporBajarDiesel (int mod)
 		}
 		// bajamos velocidad diesel
 		velocidadDiesel = velocidadDiesel - mod;
+		if (velocidadDiesel < 0)
+		{
+			velocidadDiesel = 0;
+		}
 		sprintf(comando2, "%s %d", tDiesel, velocidadDiesel);
 		out = system (comando2);
 		if (out == 1)

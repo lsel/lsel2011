@@ -1,6 +1,6 @@
 #!/bin/sh
 
-DRIVER_VIAS=/mnt/src/driver_vias.o
+DRIVER_VIAS=/mnt/src/driver_vias/driver_vias.o
 MAJORN_VIAS=251
 MINORN_AGUJAS=0
 DEVFIL_AGUJAS=/var/agujas
