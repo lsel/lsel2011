@@ -18,48 +18,48 @@
 
 void run_tracking(struct event_handler_t* eh, Train_env* train_env)
 {
+  TrackingEH* track_eh = (TrackingEH*) eh;
+  struct timeval next_activation = eh->next_activation;
 	
-	printf("Traza tracking\n");
-	if ((train_env -> cambio_sensores & S0ABAJO) != 0){
-		if ((train_env -> estado_sensores & S0ARRIBA) != 0){
-			train_env -> posTrain1 = 0;
-		}else{
-			train_env -> posTrain2 = 0;
-		}
-	}
+  printf("Traza tracking\n");
+  if ((train_env -> cambio_sensores & S0ABAJO) != 0){
+    if ((train_env -> estado_sensores & S0ARRIBA) != 0){
+      train_env -> posTrain1 = 0;
+    }else{
+      train_env -> posTrain2 = 0;
+    }
+  }
 
-	if ((train_env -> cambio_sensores & S1ABAJO) != 0){;
-		if ((train_env -> estado_sensores & S1ARRIBA) != 0){
-			train_env -> posTrain1 = 1;
-	  }else {
-			train_env -> posTrain2 = 1;
-		}
-	}	
+  if ((train_env -> cambio_sensores & S1ABAJO) != 0){;
+    if ((train_env -> estado_sensores & S1ARRIBA) != 0){
+      train_env -> posTrain1 = 1;
+    }else {
+      train_env -> posTrain2 = 1;
+    }
+  }	
 
-	if ((train_env -> cambio_sensores & S2ABAJO) != 0){
-		if ((train_env -> estado_sensores & S2ARRIBA) != 0){
-			train_env -> posTrain1 = 2;
-		}else {
-			train_env -> posTrain2 = 2;
-		}
-	}
+  if ((train_env -> cambio_sensores & S2ABAJO) != 0){
+    if ((train_env -> estado_sensores & S2ARRIBA) != 0){
+      train_env -> posTrain1 = 2;
+    }else {
+      train_env -> posTrain2 = 2;
+    }
+  }
 
-	if ((train_env -> cambio_sensores & S3ABAJO) != 0){
-		if ((train_env -> estado_sensores & S3ARRIBA) != 0){
-			train_env -> posTrain1 = 3;
-		}else {
-			train_env -> posTrain2 = 3;
-		}
-	}	
+  if ((train_env -> cambio_sensores & S3ABAJO) != 0){
+    if ((train_env -> estado_sensores & S3ARRIBA) != 0){
+      train_env -> posTrain1 = 3;
+    }else {
+      train_env -> posTrain2 = 3;
+    }
+  }	
 	
-	//next call
-	TrackingEH* track_eh = (TrackingEH*) eh;
-	struct timeval next_activation = eh->next_activation;
-	next_activation.tv_sec += PERIODO;
-	next_activation.tv_usec += UPERIODO;
-	reactor_delay_until (&next_activation);
-	//Si las posiciones han cambiado, evaluar cambio de velocidad.	
-	observable_notify_all (&track_eh->observable, train_env);
+  //next call
+  next_activation.tv_sec += PERIODO;
+  next_activation.tv_usec += UPERIODO;
+  reactor_delay_until (&next_activation);
+  //Si las posiciones han cambiado, evaluar cambio de velocidad.	
+  observable_notify_all (&track_eh->observable, train_env);
 }
 
 EventHandler* tracking_eh_new (const char* dev, int prio) 

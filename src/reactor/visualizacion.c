@@ -8,16 +8,16 @@
 
 void run_visual(struct event_handler_t* eh, Train_env* train_env)
 {
+  struct timeval next_activation = eh->next_activation;
 	
-	printf("Visualizacion\n");
+  printf("Visualizacion\n");
 	
 	
 
-	//next call
-	struct timeval next_activation = eh->next_activation;
-	next_activation.tv_sec += PERIODO;
-	next_activation.tv_usec += UPERIODO;
-	reactor_delay_until (&next_activation);
+  //next call
+  next_activation.tv_sec += PERIODO;
+  next_activation.tv_usec += UPERIODO;
+  reactor_delay_until (&next_activation);
 }
 
 EventHandler* visualizacion_eh_new (const char* dev, int prio) 

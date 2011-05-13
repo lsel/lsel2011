@@ -2,6 +2,7 @@
 #include "list.h"
 #include <sys/select.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define MAX_WAITING 16
 
@@ -154,14 +155,16 @@ reactor_next_timeout (void)
   tv.tv_sec = 0;
   if (!list_empty (&r.ready))
     return &tv;
-
-  void** it;
-  for (it = list_begin (&r.waiting);
-       it != list_end (&r.waiting);
-       it = list_next (&r.waiting, it)) {
-    EventHandler* eh = (EventHandler*) *it;
-    if (timeval_compare (&eh->next_activation, &next_activation) < 0)
-      next_activation = eh->next_activation;
+  
+  {
+    void** it;
+    for (it = list_begin (&r.waiting);
+	 it != list_end (&r.waiting);
+	 it = list_next (&r.waiting, it)) {
+      EventHandler* eh = (EventHandler*) *it;
+      if (timeval_compare (&eh->next_activation, &next_activation) < 0)
+	next_activation = eh->next_activation;
+    }
   }
   tv.tv_sec = 0;
   tv.tv_usec = 0;

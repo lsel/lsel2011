@@ -28,32 +28,31 @@ int actualizarSensores(void){
 
 void run_sensores(struct event_handler_t* eh, Train_env* train_env)
 {
+  //next call
+  SensoresEH* seh = (SensoresEH*) eh;
+  struct timeval next_activation = eh->next_activation;
 	
-	printf("Traza sensores\n");
-	driver_llegada = fopen("/var/sensores", "r");
+  printf("Traza sensores\n");
+  driver_llegada = fopen("/var/sensores", "r");
   if(driver_llegada == NULL) {
     printf("error open\n");
     train_env -> error = -1;
-	}
+  }
 
-    if (actualizarSensores()== 0){
-			if (sensores.estado!=sensores_prev.estado) {
-				train_env -> hora_evento_ms = sensores.hora_evento_ms;
-				train_env -> cambio_sensores = ((~sensores_prev.estado) & (sensores.estado));
-				train_env -> estado_sensores = sensores.estado;
-				printf ("Los sensores han cambiado");
-    	}
+  if (actualizarSensores()== 0){
+    if (sensores.estado!=sensores_prev.estado) {
+      train_env -> hora_evento_ms = sensores.hora_evento_ms;
+      train_env -> cambio_sensores = ((~sensores_prev.estado) & (sensores.estado));
+      train_env -> estado_sensores = sensores.estado;
+      printf ("Los sensores han cambiado");
     }
+  }
 
-
-	//next call
-	SensoresEH* seh = (SensoresEH*) eh;
-	struct timeval next_activation = eh->next_activation;
-	next_activation.tv_sec += PERIODO;
-	next_activation.tv_usec += UPERIODO;
-	reactor_delay_until (&next_activation);
-	//Si los sensores han cambiado, evaluar vías y estimación.	
-	observable_notify_all (&seh->observable, train_env);
+  next_activation.tv_sec += PERIODO;
+  next_activation.tv_usec += UPERIODO;
+  reactor_delay_until (&next_activation);
+  //Si los sensores han cambiado, evaluar vías y estimación.	
+  observable_notify_all (&seh->observable, train_env);
 }
 
 EventHandler* sensores_eh_new (const char* dev, int prio) 

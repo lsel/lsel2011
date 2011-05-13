@@ -1,11 +1,12 @@
 #ifndef MEMORY_H
 #define MEMORY_H
 
-#define VIA_A 1
-#define VIA_B 0
-#define SEM_VERDE 1
-#define SEM_ROJO 0
 #define DEF_SPEED 15
+
+const char SEM_ROJO = 0;
+const char SEM_VERDE = 1;
+const char VIA_A = 1;
+const char VIA_B = 0;
 
 typedef struct{
 	int posTrain1; //DIESEL 
@@ -17,7 +18,7 @@ typedef struct{
 	char semB;
 	unsigned long hora_evento_ms;
 	char cambio_sensores;
-  char estado_sensores;
+  	char estado_sensores;
 	int error;
 } Train_env;
 
