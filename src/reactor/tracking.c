@@ -3,14 +3,54 @@
 #include "memory.h"
 #include "reactor.h"
 #include "tracking.h"
+
 #define PERIODO 1
 #define UPERIODO 500000
+
+#define S0ABAJO 0x01
+#define S0ARRIBA 0x02
+#define S1ABAJO 0x04
+#define S1ARRIBA 0x08
+#define S2ABAJO 0x10
+#define S2ARRIBA 0x20
+#define S3ABAJO 0x40
+#define S3ARRIBA 0x80
 
 void run_tracking(struct event_handler_t* eh, Train_env* train_env)
 {
 	
 	printf("Traza tracking\n");
-	train_env->semB = SEM_ROJO;
+	if ((train_env -> cambio_sensores & S0ABAJO) != 0){
+		if ((train_env -> estado_sensores & S0ARRIBA) != 0){
+			train_env -> posTrain1 = 0;
+		}else{
+			train_env -> posTrain2 = 0;
+		}
+	}
+
+	if ((train_env -> cambio_sensores & S1ABAJO) != 0){;
+		if ((train_env -> estado_sensores & S1ARRIBA) != 0){
+			train_env -> posTrain1 = 1;
+	  }else {
+			train_env -> posTrain2 = 1;
+		}
+	}	
+
+	if ((train_env -> cambio_sensores & S2ABAJO) != 0){
+		if ((train_env -> estado_sensores & S2ARRIBA) != 0){
+			train_env -> posTrain1 = 2;
+		}else {
+			train_env -> posTrain2 = 2;
+		}
+	}
+
+	if ((train_env -> cambio_sensores & S3ABAJO) != 0){
+		if ((train_env -> estado_sensores & S3ARRIBA) != 0){
+			train_env -> posTrain1 = 3;
+		}else {
+			train_env -> posTrain2 = 3;
+		}
+	}	
 	
 	//next call
 	TrackingEH* track_eh = (TrackingEH*) eh;

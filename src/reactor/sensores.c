@@ -39,7 +39,8 @@ void run_sensores(struct event_handler_t* eh, Train_env* train_env)
     if (actualizarSensores()== 0){
 			if (sensores.estado!=sensores_prev.estado) {
 				train_env -> hora_evento_ms = sensores.hora_evento_ms;
-				train_env -> data_sensores = ((~sensores_prev.estado) & (sensores.estado));
+				train_env -> cambio_sensores = ((~sensores_prev.estado) & (sensores.estado));
+				train_env -> estado_sensores = sensores.estado;
 				printf ("Los sensores han cambiado");
     	}
     }

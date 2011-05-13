@@ -8,15 +8,16 @@
 #define DEF_SPEED 15
 
 typedef struct{
-	int posTrain1;
-	int posTrain2;
+	int posTrain1; //DIESEL 
+	int posTrain2; //VAPOR
 	int speedTrain1;
 	int speedTrain2;
 	char currentTrack;
 	char semA;
 	char semB;
 	unsigned long hora_evento_ms;
-	char data_sensores;
+	char cambio_sensores;
+  char estado_sensores;
 	int error;
 } Train_env;
 
