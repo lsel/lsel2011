@@ -6,12 +6,44 @@
 #define PERIODO 0
 #define UPERIODO 500000
 
+struct datos_sensores {
+  char estado;
+  unsigned long hora_evento_ms;
+};
+
+struct datos_sensores sensores, sensores_prev;
+
+FILE *driver_llegada;
+
+
+int actualizarSensores(void){
+  sensores_prev=sensores;
+  if (fread(&sensores,1,sizeof(sensores),driver_llegada) != sizeof(sensores)) {
+    printf("Error fread\n");
+    return -1;
+  }
+
+  return 0;
+}
+
 void run_sensores(struct event_handler_t* eh, Train_env* train_env)
 {
 	
 	printf("Traza sensores\n");
-	train_env->semA = SEM_ROJO;
-	
+	driver_llegada = fopen("/var/sensores", "r");
+  if(driver_llegada == NULL) {
+    printf("error open\n");
+    train_env -> error = -1;
+	}
+
+    if (actualizarSensores()== 0){
+			if (sensores.estado!=sensores_prev.estado) {
+				train_env -> hora_evento_ms = sensores.hora_evento_ms;
+				train_env -> data_sensores = ((~sensores_prev.estado) & (sensores.estado));
+				printf ("Los sensores han cambiado");
+    	}
+    }
+
 
 	//next call
 	SensoresEH* seh = (SensoresEH*) eh;

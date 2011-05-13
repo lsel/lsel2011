@@ -16,6 +16,8 @@ typedef struct{
 	char semA;
 	char semB;
 	unsigned long hora_evento_ms;
+	char data_sensores;
+	int error;
 } Train_env;
 
 void init(void);
