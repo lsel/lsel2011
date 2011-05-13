@@ -5,6 +5,7 @@
 #include "vias.h"
 #include "estimacion.h"
 #include "cambiovelocidad.h"
+#include "visualizacion.h"
 
 Train_env train_env;
 
@@ -23,17 +24,21 @@ int main()
 	init();
   reactor_init();
 	//EH de sensores, cuyos observadores son vías y estimación
-  EventHandler* sensores_eh = sensores_eh_new("nada", 1);
+  EventHandler* sensores_eh = sensores_eh_new("nada", 2);
   Observer* vias = vias_observer_new();
   Observer* estimacion = estimacion_observer_new();
   sensores_eh_add_observer ((SensoresEH*)sensores_eh, vias);
   sensores_eh_add_observer ((SensoresEH*)sensores_eh, estimacion);
   reactor_add_handler(sensores_eh);
 	//EH de tracking, cuyo observador es cambio de velocidad
-  EventHandler* track_eh = tracking_eh_new("nada", 2);
+  EventHandler* track_eh = tracking_eh_new("nada", 3);
   Observer* cambiovelocidad = cambiovelocidad_observer_new();
   tracking_eh_add_observer ((TrackingEH*)track_eh, cambiovelocidad);
   reactor_add_handler(track_eh);
+
+	//EH de visualizacion, no tiene observadores
+	EventHandler* visual_eh = visualizacion_eh_new("nada", 1);
+  reactor_add_handler(visual_eh);
 
   while(1) {
     reactor_handle_events(&train_env);
