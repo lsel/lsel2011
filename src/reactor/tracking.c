@@ -58,7 +58,7 @@ void run_tracking(struct event_handler_t* eh, Train_env* train_env)
 	next_activation.tv_sec += PERIODO;
 	next_activation.tv_usec += UPERIODO;
 	reactor_delay_until (&next_activation);
-	//Si los sensores han cambiado, evaluar cambio de velocidad.	
+	//Si las posiciones han cambiado, evaluar cambio de velocidad.	
 	observable_notify_all (&track_eh->observable, train_env);
 }
 
