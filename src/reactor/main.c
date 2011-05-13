@@ -1,4 +1,4 @@
-#include "main.h"
+#include "memory.h"
 #include "reactor.h"
 #include "sensores.h"
 #include "tracking.h"

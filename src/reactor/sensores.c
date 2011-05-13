@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "main.h"
+#include "memory.h"
 #include "reactor.h"
 #include "sensores.h"
 #define PERIODO 0

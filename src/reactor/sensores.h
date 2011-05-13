@@ -1,7 +1,7 @@
 #ifndef SENSORES_H
 #define SENSORES_H
 
-#include "main.h"
+#include "memory.h"
 #include "reactor.h"
 #include "observer.h"
 

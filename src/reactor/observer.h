@@ -2,7 +2,7 @@
 #define OBSERVER_H
 
 #include "list.h"
-#include "main.h"
+#include "memory.h"
 
 struct observable_t {
   List observers;

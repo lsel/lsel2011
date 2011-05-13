@@ -1,5 +1,5 @@
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef MEMORY_H
+#define MEMORY_H
 
 #define VIA_A 1
 #define VIA_B 0
@@ -15,6 +15,7 @@ typedef struct{
 	char currentTrack;
 	char semA;
 	char semB;
+	unsigned long hora_evento_ms;
 } Train_env;
 
 void init(void);

@@ -1,7 +1,7 @@
 #ifndef TRACKING_H
 #define TRACKING_H
 
-#include "main.h"
+#include "memory.h"
 #include "reactor.h"
 #include "observer.h"
 

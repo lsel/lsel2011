@@ -2,7 +2,7 @@
 #define REACTOR_H
 
 #include <sys/time.h>
-#include "main.h"
+#include "memory.h"
 
 struct event_handler_t;
 typedef void (*eh_func_t) (struct event_handler_t*, Train_env* train_env);
