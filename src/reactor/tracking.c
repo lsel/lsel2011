@@ -25,32 +25,40 @@ void run_tracking(struct event_handler_t* eh, Train_env* train_env)
   if ((train_env -> cambio_sensores & S0ABAJO) != 0){
     if ((train_env -> estado_sensores & S0ARRIBA) != 0){
       train_env -> posTrain1 = 0;
+			train_env -> ultimoTren = 0;
     }else{
       train_env -> posTrain2 = 0;
+			train_env -> ultimoTren = 1;
     }
   }
 
   if ((train_env -> cambio_sensores & S1ABAJO) != 0){;
     if ((train_env -> estado_sensores & S1ARRIBA) != 0){
       train_env -> posTrain1 = 1;
+			train_env -> ultimoTren = 0;
     }else {
       train_env -> posTrain2 = 1;
+			train_env -> ultimoTren = 1;
     }
   }	
 
   if ((train_env -> cambio_sensores & S2ABAJO) != 0){
     if ((train_env -> estado_sensores & S2ARRIBA) != 0){
       train_env -> posTrain1 = 2;
+			train_env -> ultimoTren = 0;
     }else {
       train_env -> posTrain2 = 2;
+			train_env -> ultimoTren = 1;
     }
   }
 
   if ((train_env -> cambio_sensores & S3ABAJO) != 0){
     if ((train_env -> estado_sensores & S3ARRIBA) != 0){
       train_env -> posTrain1 = 3;
+			train_env -> ultimoTren = 0;
     }else {
       train_env -> posTrain2 = 3;
+			train_env -> ultimoTren = 1;
     }
   }	
 	

@@ -43,7 +43,8 @@ void estimacion_notify(Observer* o, Train_env* train_env)
       }else{
 				train1.estimacionT0 = 13;
       }
-      printf("Tren diesel entra en zona 0. Tiempo estimado: %ld segundos. \n", train1.estimacionT0);
+      //printf("Tren diesel entra en zona 0. Tiempo estimado: %ld segundos. \n", train1.estimacionT0);
+			train_env-> testimacion = train1.estimacionT0;
     }
     if (posTrain1_prev == 1){
   	    train1.t1 = train_env->hora_evento_ms;
@@ -52,7 +53,8 @@ void estimacion_notify(Observer* o, Train_env* train_env)
       }else{
 				train1.estimacionT1 = 7;
       }
-      printf("Tren diesel entra en zona 1. Tiempo estimado: %ld segundos. \n", train1.estimacionT1);
+      //printf("Tren diesel entra en zona 1. Tiempo estimado: %ld segundos. \n", train1.estimacionT1);
+			train_env-> testimacion = train1.estimacionT1;
     }
     if (posTrain1_prev == 2){
       train1.t2 = train_env->hora_evento_ms;
@@ -61,11 +63,13 @@ void estimacion_notify(Observer* o, Train_env* train_env)
       }else{
 				train1.estimacionT2 = 3;
       }
-      printf("Tren diesel entra en zona 2. Tiempo estimado: %ld segundos. \n", train1.estimacionT2);
+      //printf("Tren diesel entra en zona 2. Tiempo estimado: %ld segundos. \n", train1.estimacionT2);
+			train_env-> testimacion = train1.estimacionT2;
     }
     if (posTrain1_prev == 3){
       train1.t3 = train_env->hora_evento_ms;
-      printf("Tren diesel entra en zona 3. Tiempo estimado: 0 segundos. \n");
+      //printf("Tren diesel entra en zona 3. Tiempo estimado: 0 segundos. \n");
+			train_env-> testimacion = 0;
     }
   }
 
@@ -79,7 +83,8 @@ void estimacion_notify(Observer* o, Train_env* train_env)
       }else{
 				train2.estimacionT0 = 13;
       }
-      printf("Tren de vapor entra en zona 0. Tiempo estimado: %ld segundos. \n", train2.estimacionT0);
+      //printf("Tren de vapor entra en zona 0. Tiempo estimado: %ld segundos. \n", train2.estimacionT0);
+			train_env-> testimacion = train2.estimacionT0;
     }
     if (posTrain2_prev == 1){
       train2.t1 = train_env->hora_evento_ms;
@@ -88,7 +93,8 @@ void estimacion_notify(Observer* o, Train_env* train_env)
       }else{
 				train2.estimacionT1 = 8;
       }
-      printf("Tren de vapor entra en zona 1. Tiempo estimado: %ld segundos. \n", train2.estimacionT1);
+      //printf("Tren de vapor entra en zona 1. Tiempo estimado: %ld segundos. \n", train2.estimacionT1);
+			train_env-> testimacion = train2.estimacionT1;
     }
     if (posTrain2_prev == 2){
       train2.t2 = train_env->hora_evento_ms;
@@ -97,11 +103,13 @@ void estimacion_notify(Observer* o, Train_env* train_env)
       }else{
 				train2.estimacionT2 = 4;
       }
-      printf("Tren de vapor entra en zona 2. Tiempo estimado: %ld segundos. \n", train2.estimacionT2);
+      //printf("Tren de vapor entra en zona 2. Tiempo estimado: %ld segundos. \n", train2.estimacionT2);
+			train_env-> testimacion = train2.estimacionT2;
     }
     if (posTrain2_prev == 3){
       train2.t3 = train_env->hora_evento_ms;
-      printf("Tren de vapor entra en zona 3. Tiempo estimado: 0 segundos. \n");
+      //printf("Tren de vapor entra en zona 3. Tiempo estimado: 0 segundos. \n");
+			train_env-> testimacion = 0;
     }
   }
 }

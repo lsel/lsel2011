@@ -10,17 +10,23 @@
 Train_env train_env;
 
 void init (void){
-	train_env.posTrain1 = 3;	//Tren 1 sale desde la estación.
-	train_env.posTrain2 = 1;	//Tren 2 sale desde la barrera.
-	train_env.speedTrain1 = DEF_SPEED;	//Velocidad por defecto.
+	train_env.posTrain1 = ZONA_ESTACION;//Posición inicial para el tren Diesel
+	train_env.posTrain2 = ZONA_BARRERA;	//Posición inicial para el tren de Vapor
+	train_env.speedTrain1 = DEF_SPEED;	//Velocidad por defecto
 	train_env.speedTrain2 = DEF_SPEED;
-	train_env.currentTrack = VIA_A;
-	train_env.semA = SEM_VERDE;
+	train_env.currentTrack = VIA_A;			//Vía A por defecto
+	train_env.semA = SEM_VERDE;					//Semáforos inicialmente en verde
 	train_env.semB = SEM_VERDE;
+	train_env.hora_evento_ms = CERO;
+	train_env.cambio_sensores = CERO;
+  train_env.estado_sensores = CERO;
+	train_env.ultimoTren = CERO; //Ultimo tren que ha cambiado el diesel
+	train_env.error = CERO;
 }
 
 int main()
 {
+	//Declaración de event handlers y observers
 	EventHandler* sensores_eh;
 	Observer* vias;
 	Observer* estimacion;
