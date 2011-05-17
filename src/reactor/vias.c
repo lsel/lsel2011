@@ -49,8 +49,12 @@ int cierraSensores()
 void vias_notify(Observer* o, Train_env* train_env)
 {
   //abrimos los sensores
-    abreSensores();
-	printf("Traza vias \n");
+	int i = abreSensores();
+	if (i == -1){
+		printf("error open vias");
+		train_env->error = -1;
+	}
+	DEBUG(printf("Traza vias \n"));
 	//Aquí comprobar qué ha cambiado (posición, velocidad, agujas o vías) y 
 	//cambiar las vías y semáforos cuando sea pertinente.
 	

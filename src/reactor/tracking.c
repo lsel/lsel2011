@@ -16,12 +16,13 @@
 #define S3ABAJO 0x40
 #define S3ARRIBA 0x80
 
+
 void run_tracking(struct event_handler_t* eh, Train_env* train_env)
 {
   TrackingEH* track_eh = (TrackingEH*) eh;
   struct timeval next_activation = eh->next_activation;
 	
-  printf("Traza tracking\n");
+  DEBUG(printf("Traza tracking\n"));
   if ((train_env -> cambio_sensores & S0ABAJO) != 0){
     if ((train_env -> estado_sensores & S0ARRIBA) != 0){
       train_env -> posTrain1 = 0;

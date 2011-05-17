@@ -30,7 +30,7 @@ struct control_tiempo train1, train2;
 
 void estimacion_notify(Observer* o, Train_env* train_env)
 {
-  printf("Traza estimación \n");
+  DEBUG(printf("Traza estimación \n"));
   //Aquí realizar la estimación
   
   if (train_env->posTrain1 != posTrain1_prev){  // diesel

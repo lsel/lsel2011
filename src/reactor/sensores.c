@@ -32,10 +32,10 @@ void run_sensores(struct event_handler_t* eh, Train_env* train_env)
   SensoresEH* seh = (SensoresEH*) eh;
   struct timeval next_activation = eh->next_activation;
 	
-  printf("Traza sensores\n");
+  DEBUG(printf("Traza sensores\n"));
   driver_llegada = fopen("/var/sensores", "r");
   if(driver_llegada == NULL) {
-    printf("error open\n");
+    printf("error sensores open\n");
     train_env -> error = -1;
   }
 

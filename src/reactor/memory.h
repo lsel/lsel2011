@@ -12,6 +12,12 @@
 #define VIA_B  0
 #define CERO 0
 
+#ifdef DEBUG_REACTOR
+#define DEBUG(x) x
+#else
+#define DEBUG(x)
+#endif
+
 typedef struct{
 	int posTrain1; //DIESEL 
 	int posTrain2; //VAPOR

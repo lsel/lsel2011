@@ -28,6 +28,7 @@ char* tDiesel = "/mnt/src/train_speed/ts 1 1";
 		if (out == 1)
 		{
 			printf("Salvense quien pueda!");
+			train_env->error = -1;
 		}
 		// subimos velocidad diesel
 		train_env -> speedTrain1 = (train_env -> speedTrain1) +  mod;
@@ -40,6 +41,7 @@ char* tDiesel = "/mnt/src/train_speed/ts 1 1";
 		if (out == 1)
 		{
 			printf("Salvense quien pueda!");
+			train_env->error = -1;
 		}
 }
 
@@ -59,6 +61,7 @@ void subirVaporBajarDiesel (int mod, Train_env* train_env)
 		if (out == 1)
 		{
 			printf("Salvense quien pueda!");
+			train_env->error = -1;
 		}
 		// bajamos velocidad diesel
 		train_env -> speedTrain1 = (train_env -> speedTrain1) - mod;
@@ -71,12 +74,13 @@ void subirVaporBajarDiesel (int mod, Train_env* train_env)
 		if (out == 1)
 		{
 			printf("Salvense quien pueda!");
+			train_env->error = -1;
 		}
 }
 
 void cambiovelocidad_notify(Observer* o, Train_env* train_env)
 {
-	printf("Traza cambio de velocidad \n");
+	DEBUG(printf("Traza cambio de velocidad \n"));
 	//Aquí realizar cambios de velocidad
 
 	//El tren que cambia es el diesel
