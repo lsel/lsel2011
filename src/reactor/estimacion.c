@@ -5,14 +5,6 @@
 #include "estimacion.h"
 #include "memory.h"
 
-#define DISTS0 385
-#define DISTS1 235
-#define DISTS2 145
-#define DIST01 150
-#define DIST12 90
-#define DIST23 145
-#define DIST30 90
-
 int posTrain1_prev=ZONA_ESTACION; //estacion
 int posTrain2_prev=ZONA_BARRERA;	//barrera
 
