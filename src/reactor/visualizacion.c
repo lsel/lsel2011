@@ -9,17 +9,36 @@
 void run_visual(struct event_handler_t* eh, Train_env* train_env)
 {
   struct timeval next_activation = eh->next_activation;
+	char tren[8];
+	char via[2];
 
-	printf ("\e[2JMitren Sotfware Visualization\n\n");		
+	printf ("\e[2JMitren Sotfware visualization \n\n");		
 	printf("        . . . . o o o o o\n");
 	printf("               _____      o      ________\n");
 	printf("      ____====  ]OO|_n_n__][.    |  Mi  |\n");
 	printf("     [________]_|__|________)<   | tren |\n");
 	printf("      oo    oo  'oo OOOO-| oo\\_  ~~~||~~~\n");
 	printf("  +--+--+--+--+--+--+--+--+-$1-+--+--+--+--+\n");
-	printf("\n\n");
 	
-	printf("Tren Diesel:\n\tZona: ");
+	//info señalizacion externa estacion
+	if (train_env->ultimoTren == VAPOR){
+			sprintf(tren, "vapor");
+	} else {
+			sprintf(tren, "diesel");
+	}
+	if (train_env->currentTrack == VIA_A){
+			sprintf(via, "A");
+	} else {
+			sprintf(via, "B");
+	}		
+	printf("\nPróximo tren (%s) efectuará entrada en la estación por vía: %s en %ld segundos\n\n", tren, via, train_env->testimacion);
+	
+	//info trenes
+	printf("InfoTrenes\n");
+	printf("Tren Diesel:\n");
+	printf("\tEstimación de llegada: %2d segundos\n", 1);
+	printf("\tVelocidad: %2d\n", train_env->speedTrain1);
+	printf("\tZona: ");
 	switch(train_env->posTrain1){
 		case 3:
 			printf("\t");
@@ -32,8 +51,8 @@ void run_visual(struct event_handler_t* eh, Train_env* train_env)
 		default:
 			printf("\n");
 	}
-	printf("\tEstimación de llegada: %2d segundos\n", 1);
-	printf("\tVelocidad: %2d\n", train_env->speedTrain1);
+	//printf("\tEstimación de llegada: %2d segundos\n", 1);
+	//printf("\tVelocidad: %2d\n", train_env->speedTrain1);
 
 	printf("Tren de Vapor:\n\tZona: ");
 	switch(train_env->posTrain2){
@@ -50,8 +69,10 @@ void run_visual(struct event_handler_t* eh, Train_env* train_env)
 	}
 	printf("\tEstimación de llegada: %2d segundos\n", 2);
 	printf("\tVelocidad: %2d\n", train_env->speedTrain2);
-
-	printf("\nPróximo tren: %s\tVía: %c \n", "DIESEL", train_env->currentTrack);
+	
+	
+	printf("\n\n");		
+	//printf("\nPróximo tren (%s) efectuará entrada en la estación por vía: %s en %d segundos\n", tren, via, 2);
 /*	
 	int v1,v2,t_est;
 	char next_track;

@@ -11,6 +11,8 @@
 #define VIA_A  1
 #define VIA_B  0
 #define CERO 0
+#define VAPOR 0
+#define DIESEL 1
 
 #ifdef DEBUG_REACTOR
 #define DEBUG(x) x
