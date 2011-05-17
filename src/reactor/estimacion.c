@@ -13,18 +13,8 @@
 #define DIST23 145
 #define DIST30 90
 
-int posTrain1_prev=3; //estacion
-int posTrain2_prev=1;	//barrera
-
-struct control_tiempo {
-  unsigned long t0;
-  unsigned long t1;
-  unsigned long t2;
-  unsigned long t3;
-  unsigned long estimacionT0;
-  unsigned long estimacionT1;
-  unsigned long estimacionT2;
-};
+int posTrain1_prev=ZONA_ESTACION; //estacion
+int posTrain2_prev=ZONA_BARRERA;	//barrera
 
 struct control_tiempo train1, train2;
 
@@ -36,7 +26,7 @@ void estimacion_notify(Observer* o, Train_env* train_env)
   if (train_env->posTrain1 != posTrain1_prev){  // diesel
     posTrain1_prev = train_env->posTrain1;
 
-    if (posTrain1_prev == 0){
+    if (posTrain1_prev == ZONA_TUNEL){
       train1.t0 = train_env->hora_evento_ms;
       if (train1.t3 != 0){
 				train1.estimacionT0 = (DISTS0*(train1.t0 - train1.t3))/(1000*DIST30);	
@@ -46,7 +36,7 @@ void estimacion_notify(Observer* o, Train_env* train_env)
       //printf("Tren diesel entra en zona 0. Tiempo estimado: %ld segundos. \n", train1.estimacionT0);
 			train_env-> testimacion = train1.estimacionT0;
     }
-    if (posTrain1_prev == 1){
+    if (posTrain1_prev == ZONA_BARRERA){
   	    train1.t1 = train_env->hora_evento_ms;
       if (train1.t0 != 0){
 				train1.estimacionT1 = (DISTS1*(train1.t1 - train1.t0))/(1000*DIST01);		
@@ -56,7 +46,7 @@ void estimacion_notify(Observer* o, Train_env* train_env)
       //printf("Tren diesel entra en zona 1. Tiempo estimado: %ld segundos. \n", train1.estimacionT1);
 			train_env-> testimacion = train1.estimacionT1;
     }
-    if (posTrain1_prev == 2){
+    if (posTrain1_prev == ZONA_AGUJAS){
       train1.t2 = train_env->hora_evento_ms;
       if (train1.t1 != 0){
 				train1.estimacionT2 = (DISTS2*(train1.t2 - train1.t1))/(1000*DIST12);		
@@ -66,7 +56,7 @@ void estimacion_notify(Observer* o, Train_env* train_env)
       //printf("Tren diesel entra en zona 2. Tiempo estimado: %ld segundos. \n", train1.estimacionT2);
 			train_env-> testimacion = train1.estimacionT2;
     }
-    if (posTrain1_prev == 3){
+    if (posTrain1_prev == ZONA_ESTACION){
       train1.t3 = train_env->hora_evento_ms;
       //printf("Tren diesel entra en zona 3. Tiempo estimado: 0 segundos. \n");
 			train_env-> testimacion = 0;
@@ -76,7 +66,7 @@ void estimacion_notify(Observer* o, Train_env* train_env)
   if (train_env->posTrain2 != posTrain2_prev){  // vapor
     posTrain2_prev = train_env->posTrain2;
 		
-    if (posTrain2_prev == 0){
+    if (posTrain2_prev == ZONA_TUNEL){
       train2.t0 = train_env->hora_evento_ms;
       if (train2.t3 != 0){
 				train2.estimacionT0 = (DISTS0*(train2.t0 - train2.t3))/(1000*DIST30);	
@@ -86,7 +76,7 @@ void estimacion_notify(Observer* o, Train_env* train_env)
       //printf("Tren de vapor entra en zona 0. Tiempo estimado: %ld segundos. \n", train2.estimacionT0);
 			train_env-> testimacion = train2.estimacionT0;
     }
-    if (posTrain2_prev == 1){
+    if (posTrain2_prev == ZONA_BARRERA){
       train2.t1 = train_env->hora_evento_ms;
       if (train2.t0 != 0){
 				train2.estimacionT1 = (DISTS1*(train2.t1 - train2.t0))/(1000*DIST01);		
@@ -96,7 +86,7 @@ void estimacion_notify(Observer* o, Train_env* train_env)
       //printf("Tren de vapor entra en zona 1. Tiempo estimado: %ld segundos. \n", train2.estimacionT1);
 			train_env-> testimacion = train2.estimacionT1;
     }
-    if (posTrain2_prev == 2){
+    if (posTrain2_prev == ZONA_AGUJAS){
       train2.t2 = train_env->hora_evento_ms;
       if (train2.t1 != 0){
 				train2.estimacionT2 = (DISTS2*(train2.t2 - train2.t1))/(1000*DIST12);		
@@ -106,7 +96,7 @@ void estimacion_notify(Observer* o, Train_env* train_env)
       //printf("Tren de vapor entra en zona 2. Tiempo estimado: %ld segundos. \n", train2.estimacionT2);
 			train_env-> testimacion = train2.estimacionT2;
     }
-    if (posTrain2_prev == 3){
+    if (posTrain2_prev == ZONA_ESTACION){
       train2.t3 = train_env->hora_evento_ms;
       //printf("Tren de vapor entra en zona 3. Tiempo estimado: 0 segundos. \n");
 			train_env-> testimacion = 0;

@@ -3,7 +3,7 @@
 #include "memory.h"
 #include "reactor.h"
 #include "visualizacion.h"
-#define PERIODO 3
+#define PERIODO 1
 #define UPERIODO 500000
 
 void run_visual(struct event_handler_t* eh, Train_env* train_env)
@@ -11,8 +11,15 @@ void run_visual(struct event_handler_t* eh, Train_env* train_env)
   struct timeval next_activation = eh->next_activation;
 
 	printf ("\e[2JMitren Sotfware Visualization\n\n");		
+	printf("        . . . . o o o o o\n");
+	printf("               _____      o      ________\n");
+	printf("      ____====  ]OO|_n_n__][.    |  Mi  |\n");
+	printf("     [________]_|__|________)<   | tren |\n");
+	printf("      oo    oo  'oo OOOO-| oo\\_  ~~~||~~~\n");
+	printf("  +--+--+--+--+--+--+--+--+-$1-+--+--+--+--+\n");
+	printf("\n\n");
 	
-	printf("Tren Diesel zona: ");
+	printf("Tren Diesel:\n\tZona: ");
 	switch(train_env->posTrain1){
 		case 3:
 			printf("\t");
@@ -25,8 +32,10 @@ void run_visual(struct event_handler_t* eh, Train_env* train_env)
 		default:
 			printf("\n");
 	}
-	
-	printf("Tren de Vapor zona: ");
+	printf("\tEstimación de llegada: %2d segundos\n", 1);
+	printf("\tVelocidad: %2d\n", train_env->speedTrain1);
+
+	printf("Tren de Vapor:\n\tZona: ");
 	switch(train_env->posTrain2){
 		case 3:
 			printf("\t");
@@ -39,6 +48,10 @@ void run_visual(struct event_handler_t* eh, Train_env* train_env)
 		default:
 			printf("\n");
 	}
+	printf("\tEstimación de llegada: %2d segundos\n", 2);
+	printf("\tVelocidad: %2d\n", train_env->speedTrain2);
+
+	printf("\nPróximo tren: %s\tVía: %c \n", "DIESEL", train_env->currentTrack);
 /*	
 	int v1,v2,t_est;
 	char next_track;

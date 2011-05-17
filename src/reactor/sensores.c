@@ -4,7 +4,7 @@
 #include "reactor.h"
 #include "sensores.h"
 #define PERIODO 0
-#define UPERIODO 500000
+#define UPERIODO 200000
 
 struct datos_sensores {
   char estado;
@@ -12,6 +12,7 @@ struct datos_sensores {
 };
 
 struct datos_sensores sensores, sensores_prev;
+char cambio_sensores_next = 0;
 
 FILE *driver_llegada;
 
@@ -44,15 +45,18 @@ void run_sensores(struct event_handler_t* eh, Train_env* train_env)
       train_env -> hora_evento_ms = sensores.hora_evento_ms;
       train_env -> cambio_sensores = ((~sensores_prev.estado) & (sensores.estado));
       train_env -> estado_sensores = sensores.estado;
-      printf ("Los sensores han cambiado");
+      DEBUG(printf ("Los sensores han cambiado"));
     }
   }
 
   next_activation.tv_sec += PERIODO;
   next_activation.tv_usec += UPERIODO;
   reactor_delay_until (&next_activation);
-  //Si los sensores han cambiado, evaluar vías y estimación.	
-  observable_notify_all (&seh->observable, train_env);
+  //Si los sensores han cambiado, evaluar vías y estimación.
+	if (cambio_sensores_next != train_env -> cambio_sensores) {
+  	observable_notify_all (&seh->observable, train_env);
+		cambio_sensores_next = train_env -> cambio_sensores;
+	}
 }
 
 EventHandler* sensores_eh_new (const char* dev, int prio) 

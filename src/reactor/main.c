@@ -36,20 +36,20 @@ int main()
 	init();
   reactor_init();
 	//EH de sensores, cuyos observadores son vías y estimación
-  sensores_eh = sensores_eh_new("nada", 2);
+  sensores_eh = sensores_eh_new("nada", 5);
   vias = vias_observer_new();
   estimacion = estimacion_observer_new();
   sensores_eh_add_observer ((SensoresEH*)sensores_eh, vias);
   sensores_eh_add_observer ((SensoresEH*)sensores_eh, estimacion);
   reactor_add_handler(sensores_eh);
 	//EH de tracking, cuyo observador es cambio de velocidad
-  track_eh = tracking_eh_new("nada", 3);
+  track_eh = tracking_eh_new("nada", 4);
   cambiovelocidad = cambiovelocidad_observer_new();
   tracking_eh_add_observer ((TrackingEH*)track_eh, cambiovelocidad);
   reactor_add_handler(track_eh);
 
 	//EH de visualizacion, no tiene observadores
-	visual_eh = visualizacion_eh_new("nada", 1);
+	visual_eh = visualizacion_eh_new("nada", 3);
   reactor_add_handler(visual_eh);
 
   while(1) {

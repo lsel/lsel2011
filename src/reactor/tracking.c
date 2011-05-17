@@ -5,7 +5,7 @@
 #include "tracking.h"
 
 #define PERIODO 1
-#define UPERIODO 500000
+#define UPERIODO 200000
 
 #define S0ABAJO 0x01
 #define S0ARRIBA 0x02
