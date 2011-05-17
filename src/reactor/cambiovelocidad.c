@@ -7,6 +7,9 @@
 #include "cambiovelocidad.h"
 #include "memory.h"
 
+//Para evitar que haga nada system (ahora no es necesario el cambio de velocidad e imprime muchas cosas en pantalla)
+#define system(x) 0
+
 //data velocidad
 char* tVapor = "/mnt/src/train_speed/ts 0 1";
 char* tDiesel = "/mnt/src/train_speed/ts 1 1";
