@@ -11,26 +11,11 @@
 #include "driver_sensores.h"
 #include "sensores.h"
 
-// TO DO:
-// sensores_open: que pasa con las interrupciones, conseguimos q no sde bloque, pero no esta probado aun
-// gettimemillis: estaria bien definir y programar esta funcion en una libreria aparte
-
-
-  
 
 struct datos_sensores sensores;
 
 
-
-/* Permite que la aplicación lea si ha habido cambios */
-/* http://tali.admingilde.org/dhwk/vorlesung///Rellenamos el Struct
-   sensores.estado_sensores=inb(MCF_BAR + MCFSIM_PADAT); // se meten los datos en esa registro de datos
-   sensores.hora_evento_ms = gettimemillis();
-   nuevos_datos_sensores = 1; ar01s08.html */
-/* Linux Device Drivers p. 163 */
-
-
-/* Abriendo el dispositivo como fichero*/
+/* Abrir el dispositivo como fichero*/
 int sensores_open(struct inode *inode, struct file *file) 
 {
   printk("driver_sensores: Driver abierto\n");
@@ -38,7 +23,7 @@ int sensores_open(struct inode *inode, struct file *file)
   return 0; 
 }
 
-/* Cerrando el dispositivo como fichero*/
+/* Cerrar el dispositivo como fichero*/
 int sensores_release(struct inode *inode, struct file *file)
 {
   
@@ -53,11 +38,15 @@ ssize_t sensores_read(struct file *filep, char *buf, size_t count, loff_t *f_pos
 {
   u_int16_t PA;
   u_int8_t PA8;
-  //Rellenamos el Struct
+  
+  /* Lectura del puerto A del Coldfire:
+     El puerto 1 de Antares está conectado de una forma rara con el puerto A del Coldfire.
+     Los 7 bits menos sig. del puerto 1 tambien lo son del puerto A (p1[6..0]=>pA[6..0])
+     pero el bit mas significativo del p1 esta conectado al bit 8 del pA (p1[7]=>pA[8]).
+     Por eso hay que hacer ese desplazamiento mágico.  */
+  
   PA = inw(MCF_BAR + MCFSIM_PADAT);
-
-
-  PA8 = ((PA>>8)&0x01) << 7;	
+  PA8 = ((PA>>8)&0x01) << 7;  
   sensores.estado_sensores = (PA & 0x7F) + PA8;
 	
 
@@ -80,12 +69,17 @@ int init_sensores(void)
   int result;
   u_int16_t tmp;
 
+  // Los inw() no son más que para comprobar en las trazas que todo
+  // está inicializado como debería. 
+  // La configuración inicial de Antares es casi suficiente para lo que queremos, 
+  // solo hay que configurar el puerto A del Coldfire como entrada.
+
   printk("driver_sensores: Iniciando\n");
   
   tmp = inw(MCF_BAR + MCFSIM_PACNT);
   printk(KERN_INFO "driver_sensores: (init) PACNT =0x%04x\n",tmp);
 
-  // Puertos de entrada (p406 manual)
+  // Configurar el puerto A del Coldfire como entrada (p406 del manual)
   outw(0x0000,(MCF_BAR + MCFSIM_PADDR)); 
 
   tmp = inw(MCF_BAR + MCFSIM_PADDR);

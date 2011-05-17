@@ -32,6 +32,7 @@ ssize_t sensores_read(struct file *filep, char *buf, size_t count, loff_t *f_pos
 void manejador_external(int id, void *p, struct pt_regs *regs); 
 
 /* Para manejar el cerrojo */
+// WTF: Esta basura no deberia existir.
 struct sensores_data {
   struct sensores_data	        *ops;
   spinlock_t	        	lock;
