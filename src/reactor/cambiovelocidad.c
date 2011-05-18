@@ -87,7 +87,8 @@ void cambiovelocidad_notify(Observer* o, Train_env* train_env)
 	//Aquí realizar cambios de velocidad
 
 	//El tren que cambia es el diesel
-	if(train_env -> ultimoTren ==VAPOR){
+	if(train_env -> ultimoTren ==DIESEL)
+	{
 
 		//Misma zona(bajar/subir mas la velocidad)
 		if (train_env -> posTrain1 == train_env -> posTrain2) {

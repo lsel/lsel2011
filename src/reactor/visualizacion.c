@@ -23,54 +23,69 @@ void run_visual(struct event_handler_t* eh, Train_env* train_env)
 	
 	// Próximo tren (tren) es el que está más cerca de la estación.
 	//Es el diesel
-	if (train_env->posTrain1 > train_env->posTrain2)
-	{
-			sprintf(tren, "diesel");
-			testimacion = train_env -> testimacionDiesel;
-	}
-	//Es el de vapor
-	if (train_env->posTrain1 < train_env->posTrain2)
-	{
-			sprintf(tren, "vapor");
-			testimacion = train_env -> testimacionVapor;
-	}
-	//En caso de que estén en la misma zona (no debería pasar), el último en cambiar
-	//ha sido el último en entrar, por tanto primero llegará el que ya estaba en esa zona.
-	if (train_env->posTrain1 == train_env->posTrain2)
-	{
-		if (train_env->ultimoTren == VAPOR)
+	if ((train_env -> posTrain1 == 3) | (train_env->posTrain2 ==3) ){
+		if ( train_env -> posTrain2 == 3)
 		{
 			sprintf(tren, "diesel");
 			testimacion = train_env -> testimacionDiesel;
 		}
-		else{
+		if ( train_env -> posTrain1 == 3)
+		{
 			sprintf(tren, "vapor");
 			testimacion = train_env -> testimacionVapor;
 		}
 	}
+	else{
+		if (train_env->posTrain1 > train_env->posTrain2)
+		{
+			sprintf(tren, "diesel");
+			testimacion = train_env -> testimacionDiesel;
+		}
+		//Es el de vapor
+		if (train_env->posTrain1 < train_env->posTrain2)
+		{
+			sprintf(tren, "vapor");
+			testimacion = train_env -> testimacionVapor;
+		}
+	//En caso de que estén en la misma zona (no debería pasar), el último en cambiar
+	//ha sido el último en entrar, por tanto primero llegará el que ya estaba en esa zona.
+		if (train_env->posTrain1 == train_env->posTrain2)
+		{
+			if (train_env->ultimoTren == DIESEL)
+			{
+				sprintf(tren, "vapor");
+				testimacion = train_env -> testimacionVapor;
+			}
+			else{
+				sprintf(tren, "diesel");
+				testimacion = train_env -> testimacionDiesel;
+			}
+		}
+	}
 	//Próxima vía: SI hay un tren en la estación, es la del tren, si no lo hay, es la posición de las vías.
-	if ((train_env->posTrain1 == ZONA_ESTACION) | (train_env->posTrain2 == ZONA_ESTACION)){
-	
+	if ((train_env->posTrain1 == ZONA_ESTACION) | (train_env->posTrain2 == ZONA_ESTACION))
+	{
 		if (train_env->currentTrack == VIA_A){
 			sprintf(via, "B");
 		} else {
 			sprintf(via, "A");
 		}
-	} else{
+	} 
+	else{
 		if (train_env->currentTrack == VIA_A){
 			sprintf(via, "A");
 		} else {
 			sprintf(via, "B");
 		}
 	}
+	//info prox tren en la estación	
 	printf("\nPróximo tren (%s) efectuará entrada en la estación por vía: %s en %ld\n\n", tren, via, testimacion);
-	
 	//info trenes
 	printf("InfoTrenes\n");
 	printf("Tren Diesel:\n");
 	printf("\tEstimación de llegada: %ld segundos\n",  train_env->testimacionDiesel);
 	printf("\tVelocidad: %2d\n", train_env->speedTrain1);
-	printf("\tZona: ");
+	printf("\tZona:");
 	switch(train_env->posTrain1){
 		case 3:
 			printf("\t");
@@ -79,14 +94,17 @@ void run_visual(struct event_handler_t* eh, Train_env* train_env)
 		case 1:
 			printf("\t");						
 		case 0:
-			printf("%d",train_env->posTrain1);
+			printf("\t%d",train_env->posTrain1);
 		default:
 			printf("\n");
 	}
 	//printf("\tEstimación de llegada: %2d segundos\n", 1);
 	//printf("\tVelocidad: %2d\n", train_env->speedTrain1);
 
-	printf("Tren de Vapor:\n\tZona: ");
+	printf("Tren de Vapor:\n");
+	printf("\tEstimación de llegada: %ld segundos\n", train_env->testimacionVapor);
+	printf("\tVelocidad: %2d\n", train_env->speedTrain2);
+	printf("\tZona:");
 	switch(train_env->posTrain2){
 		case 3:
 			printf("\t");
@@ -95,13 +113,10 @@ void run_visual(struct event_handler_t* eh, Train_env* train_env)
 		case 1:
 			printf("\t");						
 		case 0:
-			printf("%d",train_env->posTrain2);
+			printf("\t%d",train_env->posTrain2);
 		default:
 			printf("\n");
 	}
-	printf("\tEstimación de llegada: %ld segundos\n", train_env->testimacionVapor);
-	printf("\tVelocidad: %2d\n", train_env->speedTrain2);
-	
 	
 	printf("\n\n");		
 
