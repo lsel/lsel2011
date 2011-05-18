@@ -63,7 +63,7 @@ void subirVaporBajarDiesel (int mod, Train_env* train_env)
 		out = system (comando);
 		if (out == 1)
 		{
-			printf("Salvense quien pueda!");
+			printf("Sálvese quien pueda!");
 			train_env->error = -1;
 		}
 		// bajamos velocidad diesel
@@ -76,7 +76,7 @@ void subirVaporBajarDiesel (int mod, Train_env* train_env)
 		out = system (comando2);
 		if (out == 1)
 		{
-			printf("Salvense quien pueda!");
+			printf("Sálvese quien pueda!");
 			train_env->error = -1;
 		}
 }
@@ -87,7 +87,7 @@ void cambiovelocidad_notify(Observer* o, Train_env* train_env)
 	//Aquí realizar cambios de velocidad
 
 	//El tren que cambia es el diesel
-	if(train_env -> ultimoTren ==0){
+	if(train_env -> ultimoTren ==VAPOR){
 
 		//Misma zona(bajar/subir mas la velocidad)
 		if (train_env -> posTrain1 == train_env -> posTrain2) {
@@ -103,34 +103,34 @@ void cambiovelocidad_notify(Observer* o, Train_env* train_env)
 		}
 	}
 	//Diesel alcanza una zona a vapor
-	if ((train_env -> posTrain1==0) & (train_env -> posTrain2==1)) {
+	if ((train_env -> posTrain1==ZONA_TUNEL) & (train_env -> posTrain2==ZONA_BARRERA)) {
 		//train_env -> speedTrain2++;
 		//train_env -> speedTrain1--;
 		subirVaporBajarDiesel(2, train_env);
 	}
-	if ((train_env -> posTrain1==1) & (train_env -> posTrain2==2)) {
+	if ((train_env -> posTrain1==ZONA_BARRERA) & (train_env -> posTrain2==ZONA_AGUJAS)) {
 		subirVaporBajarDiesel(2, train_env);
 	}
-	if ((train_env -> posTrain1==2) & (train_env -> posTrain2==3)) {
+	if ((train_env -> posTrain1==ZONA_AGUJAS) & (train_env -> posTrain2==ZONA_ESTACION)) {
 		subirVaporBajarDiesel(2, train_env);
 	}
-	if ((train_env -> posTrain1==3) & (train_env -> posTrain2==0)) {
+	if ((train_env -> posTrain1==ZONA_ESTACION) & (train_env -> posTrain2==ZONA_TUNEL)) {
 		subirVaporBajarDiesel(2, train_env);
 	}
 	
 	//Vapor alcanza una zona a diesel
-	if ((train_env -> posTrain1==1) & (train_env -> posTrain2==0)) {
+	if ((train_env -> posTrain1==ZONA_BARRERA) & (train_env -> posTrain2==ZONA_TUNEL)) {
 		//train_env -> speedTrain2--;
 		//train_env -> speedTrain1++;
 		subirDieselBajarVapor(2, train_env);
 	}
-	if ((train_env -> posTrain1==2) & (train_env -> posTrain2==1)) {
+	if ((train_env -> posTrain1==ZONA_AGUJAS) & (train_env -> posTrain2==ZONA_BARRERA)) {
 		subirDieselBajarVapor(2, train_env);
 	}
-	if ((train_env -> posTrain1==3) & (train_env -> posTrain2==2)) {
+	if ((train_env -> posTrain1==ZONA_ESTACION) & (train_env -> posTrain2==ZONA_AGUJAS)) {
 		subirDieselBajarVapor(2, train_env);
 	}
-	if ((train_env -> posTrain1==0) & (train_env -> posTrain2==3)) {
+	if ((train_env -> posTrain1==ZONA_TUNEL) & (train_env -> posTrain2==ZONA_ESTACION)) {
 		subirDieselBajarVapor(2, train_env);
 	}
 }

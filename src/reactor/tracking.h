@@ -4,6 +4,9 @@
 #include "memory.h"
 #include "reactor.h"
 #include "observer.h"
+//Periodo de tracking
+#define PERIODO 0
+#define UPERIODO 300000
 
 struct tracking_eh_t {
   EventHandler eh;

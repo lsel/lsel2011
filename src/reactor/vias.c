@@ -7,14 +7,10 @@
 #include "sensores.h"
 #include "vias.h"
 
-#define SALIDA 0x01  // S0abajo
-#define ENTRADA 0x40 // S3abajo
-#define DELAY2S 2000
-
-//interfaces con drivers
-int driver_agujas;
-int driver_semA;
-int driver_semB;
+// df driver vias
+	int driver_agujas;
+	int driver_semA;
+	int driver_semB;
 
 int abreSensores()
 { 
@@ -25,8 +21,8 @@ int abreSensores()
 
 	if((driver_agujas < 0)||(driver_semA < 0)||(driver_semB < 0)) 
   {
-    		printf("error al abrir algun fichero\n");
-    		return -1;
+		printf("error al abrir vias\n");
+ 		return -1;
   }
   return 0;
 }
@@ -40,7 +36,7 @@ int cierraSensores()
 
 	if((dagujas < 0)||(dsemA < 0)||(dsemB < 0)) 
   {
-    		printf("error al abrir algun fichero\n");
+    		printf("error al cerrar vias\n");
     		return -1;
   }
   return 0;
@@ -51,7 +47,6 @@ void vias_notify(Observer* o, Train_env* train_env)
   //abrimos los sensores
 	int i = abreSensores();
 	if (i == -1){
-		printf("error open vias");
 		train_env->error = -1;
 	}
 	DEBUG(printf("Traza vias \n"));
@@ -64,7 +59,7 @@ void vias_notify(Observer* o, Train_env* train_env)
      {
     		if(train_env -> semB==SEM_VERDE) //via A verde
         { 
-            if ((train_env -> cambio_sensores & ENTRADA) != 0)
+            if ((train_env -> cambio_sensores & S3ABAJO) != 0)
               { 
                     //actualizamos las variables
                       train_env -> semA=SEM_VERDE;
@@ -78,7 +73,7 @@ void vias_notify(Observer* o, Train_env* train_env)
         }else 
         if (train_env -> semB == SEM_ROJO) 
         {
-				   if ((train_env -> cambio_sensores & ENTRADA) != 0)
+				   if ((train_env -> cambio_sensores & S3ABAJO) != 0)
            { 
                     //actualizamos las variables
             					train_env -> currentTrack = VIA_B;
@@ -86,7 +81,7 @@ void vias_notify(Observer* o, Train_env* train_env)
 					 						write(driver_agujas,&train_env -> currentTrack,1);
 					 }
         }
-	      if((train_env -> cambio_sensores & SALIDA) != 0)
+	      if((train_env -> cambio_sensores & S0ABAJO) != 0)
         {
        						//actualizamos las variables
          						train_env -> semA=SEM_VERDE;
@@ -103,7 +98,7 @@ void vias_notify(Observer* o, Train_env* train_env)
      	if(train_env -> semB==SEM_VERDE)
       { 
       // vía A rojo
-        if((train_env -> cambio_sensores & SALIDA) != 0)
+        if((train_env -> cambio_sensores & S0ABAJO) != 0)
         {
              //actualizamos las variables
          			train_env -> semA=SEM_VERDE;
@@ -122,7 +117,7 @@ void vias_notify(Observer* o, Train_env* train_env)
 			      //Los dos semáforos en rojo. Encendemos el semáforo de la vía A
 			        write(driver_semA,&train_env -> semA,1);
 			      //arrancar tren via A
-				 if((train_env -> cambio_sensores & SALIDA) != 0)
+				 if((train_env -> cambio_sensores & S0ABAJO) != 0)
          { 
          //de '3' pasa a '1'
 	           usleep(DELAY2S); // espera 2 seg a cambiar a verde, comprobar el tiempo 
@@ -143,7 +138,7 @@ void vias_notify(Observer* o, Train_env* train_env)
        if(train_env -> semA==SEM_VERDE)
        { 
        //via A verde
-         if ((train_env -> cambio_sensores & ENTRADA) != 0){ 
+         if ((train_env -> cambio_sensores & S3ABAJO) != 0){ 
                //actualizamos las variables
                   train_env -> semB=SEM_VERDE;
                  	train_env -> semA=SEM_ROJO;
@@ -155,7 +150,7 @@ void vias_notify(Observer* o, Train_env* train_env)
          }
        }else if (train_env -> semA == SEM_ROJO) 
        {
-				 if ((train_env -> cambio_sensores & ENTRADA) != 0)
+				 if ((train_env -> cambio_sensores & S3ABAJO) != 0)
          { 
                //actualizamos las variables
                  train_env -> currentTrack = VIA_A;
@@ -163,7 +158,7 @@ void vias_notify(Observer* o, Train_env* train_env)
 									write(driver_agujas,&train_env -> currentTrack,1);
 				 }
 				}
-	     if((train_env -> cambio_sensores & SALIDA) != 0)
+	     if((train_env -> cambio_sensores & S0ABAJO) != 0)
        {
         usleep(DELAY2S); // espera 2 seg a cambiar a verde, comprobar el tiempo 
              //actualizamos las variables
@@ -179,7 +174,7 @@ void vias_notify(Observer* o, Train_env* train_env)
                if(train_env -> semA==SEM_VERDE)
                { 
                // vía A rojo
-                  if((train_env -> cambio_sensores & SALIDA) != 0)
+                  if((train_env -> cambio_sensores & S0ABAJO) != 0)
                   {
 	            			  usleep(DELAY2S); // espera 2 seg a cambiar a verde, comprobar el tiempo 
                       //actualizamos las variables
@@ -198,7 +193,7 @@ void vias_notify(Observer* o, Train_env* train_env)
                    //escribimos en el driver
          	 	         write(driver_semA,&train_env -> semA,1); // vía A verde
 			             //arrancar tren via A
-				           if((train_env -> cambio_sensores & SALIDA) != 0){
+				           if((train_env -> cambio_sensores & S0ABAJO) != 0){
 	            			   usleep(DELAY2S); // espera 2 seg a cambiar a verde, comprobar el tiempo
                        //actualizamos las variables
                          train_env -> semB=SEM_VERDE;

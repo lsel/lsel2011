@@ -4,62 +4,58 @@
 #include "reactor.h"
 #include "tracking.h"
 
-#define PERIODO 1
-#define UPERIODO 200000
-
-#define S0ABAJO 0x01
-#define S0ARRIBA 0x02
-#define S1ABAJO 0x04
-#define S1ARRIBA 0x08
-#define S2ABAJO 0x10
-#define S2ARRIBA 0x20
-#define S3ABAJO 0x40
-#define S3ARRIBA 0x80
-
-
 void run_tracking(struct event_handler_t* eh, Train_env* train_env)
 {
   TrackingEH* track_eh = (TrackingEH*) eh;
   struct timeval next_activation = eh->next_activation;
 	
   DEBUG(printf("Traza tracking\n"));
+	//Evento de salida en la estación (entrada hacia el túnel)
   if ((train_env -> cambio_sensores & S0ABAJO) != 0){
+		//Si es el diesel, se actualiza su posición y el último tren que ha cambiado.
     if ((train_env -> estado_sensores & S0ARRIBA) != 0){
-      train_env -> posTrain1 = 0;
-			train_env -> ultimoTren = 0;
+      train_env -> posTrain1 = ZONA_TUNEL;
+			train_env -> ultimoTren = DIESEL;
     }else{
-      train_env -> posTrain2 = 0;
-			train_env -> ultimoTren = 1;
+		//Se actualiza el de vapor.
+      train_env -> posTrain2 = ZONA_TUNEL;
+			train_env -> ultimoTren = VAPOR;
     }
   }
-
+	//Evento de salida del túnel (entrada hacia barrera)
   if ((train_env -> cambio_sensores & S1ABAJO) != 0){;
+		//Es el tren diesel
     if ((train_env -> estado_sensores & S1ARRIBA) != 0){
-      train_env -> posTrain1 = 1;
-			train_env -> ultimoTren = 0;
+      train_env -> posTrain1 = ZONA_BARRERA;
+			train_env -> ultimoTren = DIESEL;
     }else {
-      train_env -> posTrain2 = 1;
-			train_env -> ultimoTren = 1;
+		//Es el tren de vapor
+      train_env -> posTrain2 = ZONA_BARRERA;
+			train_env -> ultimoTren = VAPOR;
     }
   }	
-
+	//Evento de salida de la barrera (entrada hacia agujas)
   if ((train_env -> cambio_sensores & S2ABAJO) != 0){
+		//Es el tren diesel
     if ((train_env -> estado_sensores & S2ARRIBA) != 0){
-      train_env -> posTrain1 = 2;
-			train_env -> ultimoTren = 0;
+      train_env -> posTrain1 = ZONA_AGUJAS;
+			train_env -> ultimoTren = DIESEL;
     }else {
-      train_env -> posTrain2 = 2;
-			train_env -> ultimoTren = 1;
+		//Es el tren de vapor
+      train_env -> posTrain2 = ZONA_AGUJAS;
+			train_env -> ultimoTren = VAPOR;
     }
   }
-
+	//Evento de salida de agujas (entrada hacia estación)
   if ((train_env -> cambio_sensores & S3ABAJO) != 0){
+		//Es el tren diesel
     if ((train_env -> estado_sensores & S3ARRIBA) != 0){
-      train_env -> posTrain1 = 3;
-			train_env -> ultimoTren = 0;
+      train_env -> posTrain1 = ZONA_ESTACION;
+			train_env -> ultimoTren = DIESEL;
     }else {
-      train_env -> posTrain2 = 3;
-			train_env -> ultimoTren = 1;
+		//Es el tren de vapor    
+  		train_env -> posTrain2 = ZONA_ESTACION;
+			train_env -> ultimoTren = VAPOR;
     }
   }	
 	
@@ -67,6 +63,7 @@ void run_tracking(struct event_handler_t* eh, Train_env* train_env)
   next_activation.tv_sec += PERIODO;
   next_activation.tv_usec += UPERIODO;
   reactor_delay_until (&next_activation);
+
   //Si las posiciones han cambiado, evaluar cambio de velocidad.	
   observable_notify_all (&track_eh->observable, train_env);
 }

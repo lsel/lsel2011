@@ -20,8 +20,10 @@ void init (void){
 	train_env.hora_evento_ms = CERO;
 	train_env.cambio_sensores = CERO;
   train_env.estado_sensores = CERO;
-	train_env.ultimoTren = CERO; //Ultimo tren que ha cambiado el diesel
+	train_env.ultimoTren = DIESEL; //Ultimo tren que ha cambiado el diesel
 	train_env.error = CERO;
+	train_env.testimacionDiesel = CERO;
+	train_env.testimacionVapor = CUATRO;
 }
 
 int main()

@@ -3,7 +3,7 @@
 #include "memory.h"
 #include "reactor.h"
 #include "visualizacion.h"
-#define PERIODO 1
+#define PERIODO 0
 #define UPERIODO 500000
 
 void run_visual(struct event_handler_t* eh, Train_env* train_env)
@@ -11,6 +11,7 @@ void run_visual(struct event_handler_t* eh, Train_env* train_env)
   struct timeval next_activation = eh->next_activation;
 	char tren[8];
 	char via[2];
+	unsigned long testimacion = 0;
 
 	printf ("\e[2JMitren Sotfware visualization \n\n");		
 	printf("        . . . . o o o o o\n");
@@ -20,23 +21,54 @@ void run_visual(struct event_handler_t* eh, Train_env* train_env)
 	printf("      oo    oo  'oo OOOO-| oo\\_  ~~~||~~~\n");
 	printf("  +--+--+--+--+--+--+--+--+-$1-+--+--+--+--+\n");
 	
-	//info señalizacion externa estacion
-	if (train_env->ultimoTren == VAPOR){
-			sprintf(tren, "vapor");
-	} else {
+	// Próximo tren (tren) es el que está más cerca de la estación.
+	//Es el diesel
+	if (train_env->posTrain1 > train_env->posTrain2)
+	{
 			sprintf(tren, "diesel");
+			testimacion = train_env -> testimacionDiesel;
 	}
-	if (train_env->currentTrack == VIA_A){
-			sprintf(via, "A");
-	} else {
+	//Es el de vapor
+	if (train_env->posTrain1 < train_env->posTrain2)
+	{
+			sprintf(tren, "vapor");
+			testimacion = train_env -> testimacionVapor;
+	}
+	//En caso de que estén en la misma zona (no debería pasar), el último en cambiar
+	//ha sido el último en entrar, por tanto primero llegará el que ya estaba en esa zona.
+	if (train_env->posTrain1 == train_env->posTrain2)
+	{
+		if (train_env->ultimoTren == VAPOR)
+		{
+			sprintf(tren, "diesel");
+			testimacion = train_env -> testimacionDiesel;
+		}
+		else{
+			sprintf(tren, "vapor");
+			testimacion = train_env -> testimacionVapor;
+		}
+	}
+	//Próxima vía: SI hay un tren en la estación, es la del tren, si no lo hay, es la posición de las vías.
+	if ((train_env->posTrain1 == ZONA_ESTACION) | (train_env->posTrain2 == ZONA_ESTACION)){
+	
+		if (train_env->currentTrack == VIA_A){
 			sprintf(via, "B");
-	}		
-	printf("\nPróximo tren (%s) efectuará entrada en la estación por vía: %s en %ld segundos\n\n", tren, via, train_env->testimacion);
+		} else {
+			sprintf(via, "A");
+		}
+	} else{
+		if (train_env->currentTrack == VIA_A){
+			sprintf(via, "A");
+		} else {
+			sprintf(via, "B");
+		}
+	}
+	printf("\nPróximo tren (%s) efectuará entrada en la estación por vía: %s en %ld\n\n", tren, via, testimacion);
 	
 	//info trenes
 	printf("InfoTrenes\n");
 	printf("Tren Diesel:\n");
-	printf("\tEstimación de llegada: %2d segundos\n", 1);
+	printf("\tEstimación de llegada: %ld segundos\n",  train_env->testimacionDiesel);
 	printf("\tVelocidad: %2d\n", train_env->speedTrain1);
 	printf("\tZona: ");
 	switch(train_env->posTrain1){
@@ -67,71 +99,12 @@ void run_visual(struct event_handler_t* eh, Train_env* train_env)
 		default:
 			printf("\n");
 	}
-	printf("\tEstimación de llegada: %2d segundos\n", 2);
+	printf("\tEstimación de llegada: %ld segundos\n", train_env->testimacionVapor);
 	printf("\tVelocidad: %2d\n", train_env->speedTrain2);
 	
 	
 	printf("\n\n");		
-	//printf("\nPróximo tren (%s) efectuará entrada en la estación por vía: %s en %d segundos\n", tren, via, 2);
-/*	
-	int v1,v2,t_est;
-	char next_track;
-	char z1[10]="estac";
-	char z2[10]= "fjlfd";
-	char next_train[8] = "TRUÑO";
-	v1 = train_env->speedTrain1;
-	v2 = train_env->speedTrain2;
-	next_track= (train_env->currentTrack == VIA_A) ? 'A' : 'B';
-	t_est = train_env->testimacion;
 
-	switch(train_env->ultimoTren){
-		case 0:
-			sprintf(next_train, "DIESEL");
-			break;
-		case 1:
-			sprintf(next_train, "VAPOR");
-			break;
-		default:
-			break;
-	}
-
-	switch(train_env->posTrain1){
-		case 0:
-			sprintf(z1, "TUNEL");
-			break;
-		case 1:
-			sprintf(z1, "BARRERA");
-			break;
-		case 2:
-			sprintf(z1, "AGUJAS");
-			break;
-		case 3:
-			sprintf(z1, "ESTACIÓN");
-			break;
-		default:
-			break;
-	}
-	switch(train_env->posTrain2){
-		case 0:
-			sprintf(z2, "TUNEL");
-			break;
-		case 1:
-			sprintf(z2, "BARRERA");	
-			break;
-		case 2:
-			sprintf(z2, "AGUJAS");
-			break;
-		case 3:
-			sprintf(z2, "ESTACIÓN");
-			break;
-		default:
-			break;
-	}
-
-  printf("Proyecto MiTren - LSEL 2011\n\nPróximo tren: %s\tVía: %c\tTiempo restante en segundos: %d\n",next_train, next_track, t_est);
-	printf("Información sobre trenes.\nTren Diesel:\t\t\tTren de Vapor:\n");
-	printf("Zona: %s\t\tZona: %s\nVelocidad: %d\t\tVelocidad: %d\n",z1,z2,v1,v2);
-*/
   //next call
   next_activation.tv_sec += PERIODO;
   next_activation.tv_usec += UPERIODO;
