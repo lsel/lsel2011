@@ -79,7 +79,7 @@ void run_visual(struct event_handler_t* eh, Train_env* train_env)
 		}
 	}
 	//info prox tren en la estación	
-	printf("\nPróximo tren (%s) efectuará entrada en la estación por vía: %s en %ld\n\n", tren, via, testimacion);
+	printf("\nPróximo tren (%s) efectuará entrada en la estación por vía: %s en %ld segundos\n\n", tren, via, testimacion);
 	//info trenes
 	printf("InfoTrenes\n");
 	printf("Tren Diesel:\n");
@@ -88,20 +88,24 @@ void run_visual(struct event_handler_t* eh, Train_env* train_env)
 	printf("\tZona:");
 	switch(train_env->posTrain1){
 		case 3:
-			printf("\t");
+			printf("\t.\t.\t.\t%d",train_env->posTrain1);
+			break;
 		case 2:
-			printf("\t");
+			printf("\t.\t.\t%d\t.",train_env->posTrain1);
+			break;
 		case 1:
-			printf("\t");						
+			printf("\t.\t%d\t.\t.",train_env->posTrain1);
+			break;						
 		case 0:
-			printf("\t%d",train_env->posTrain1);
+			printf("\t%d\t.\t.\t.",train_env->posTrain1);
+			break;
 		default:
 			printf("\n");
 	}
 	//printf("\tEstimación de llegada: %2d segundos\n", 1);
 	//printf("\tVelocidad: %2d\n", train_env->speedTrain1);
 
-	printf("Tren de Vapor:\n");
+	printf("\nTren de Vapor:\n");
 	printf("\tEstimación de llegada: %ld segundos\n", train_env->testimacionVapor);
 	printf("\tVelocidad: %2d\n", train_env->speedTrain2);
 	printf("\tZona:");
